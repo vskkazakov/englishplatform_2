@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация — Английский Онлайн</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f7f2fa; }
+        .header-bar { background: #6610f2; }
+        .register-card {
+            max-width: 400px;
+            margin: 60px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(80,30,120,0.07);
+        }
+    </style>
+</head>
+<body>
+    <!-- Верхняя панель -->
+    <nav class="navbar header-bar shadow p-3">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 text-white">Английский Онлайн</span>
+        </div>
+    </nav>
+
+    <!-- Форма регистрации -->
+    <div class="container">
+        <div class="card register-card p-4">
+            <h2 class="mb-4 text-center text-primary">Регистрация</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="inputName" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="inputName" placeholder="Ваше имя">
+                </div>
+                <div class="mb-3">
+                    <label for="inputEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com">
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Пароль">
+                </div>
+                <button type="submit" class="btn btn-primary w-100" disabled>Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
