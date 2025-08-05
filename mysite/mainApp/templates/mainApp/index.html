@@ -2,22 +2,21 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>EnglishFuture</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8" />
+    <title>Добро пожаловать в будущее изучения английского</title>
+    <link rel="stylesheet" href="{% static 'mysite/style.css' %}">
+    <script src="{% static 'mysite/app.js' %}" defer></script>
+</head>
 <body>
-    <div class="cyber-grid"></div>
-    
     <header class="header">
-        <div class="container header-container">
-            <h1 class="logo">
-                <span class="logo-text">English</span>
-                <span class="logo-accent">Future</span>
-                <a href="authen" class="btn btn-register">Регистрация</a>
-            </h1>
-            <nav class="nav">
-                <div class="nav-indicator"></div>
-            </nav>
+        <div class="header-container">
+            <h1>Революционная платформа для эффективного изучения английского</h1>
+            {% if user.is_authenticated %}
+                <span style="margin-right: 16px;">Привет, {{ user.first_name }}!</span>
+                <a href="{% url 'authen:logout' %}" class="btn-logout">Выйти</a>
+            {% else %}
+                <a href="{% url 'authen:index' %}" class="btn-register">Регистрация</a>
+            {% endif %}
         </div>
     </header>
 

@@ -792,22 +792,18 @@ body {
   justify-content: space-between;
 }
 
-.btn-register {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 12px 20px;
+.btn-register, .btn-logout {
+  padding: 10px 20px;
   border-radius: 8px;
-  background: linear-gradient(45deg, #8A2BE2, #1E90FF);
+  background: #5726ba;
   color: white;
-  font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 0 15px #8A2BE2;
-  transition: transform 0.3s ease;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
-.btn-register:hover {
-  transform: scale(1.1);
+.btn-register:hover, .btn-logout:hover {
+  background-color: #7c3aed;
 }
 
 .header::before {
