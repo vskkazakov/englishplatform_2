@@ -73,6 +73,16 @@ class UserProfile(models.Model):
         auto_now=True,
         verbose_name="Дата обновления"
     )
+    ROLE_CHOICES = [
+        ('student', 'Ученик'),
+        ('teacher', 'Учитель'),
+    ]
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default='student',
+        verbose_name="Роль пользователя"
+    )
 
     class Meta:
         verbose_name = "Профиль пользователя"

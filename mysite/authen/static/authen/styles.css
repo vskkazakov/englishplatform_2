@@ -1,0 +1,207 @@
+/* Основные стили */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Информация о пользователе */
+.user-info {
+    text-align: right;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.logout-btn {
+    color: #ff6b6b;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
+}
+
+/* Сообщения */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.message.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 1px solid #4caf50;
+}
+
+.message.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    border: 1px solid #f44336;
+}
+
+.message.info {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+    border: 1px solid #2196f3;
+}
+
+/* Табы */
+.tab-buttons {
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.tab-btn:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+}
+
+/* Формы */
+.registration-form,
+.login-form {
+    display: none;
+}
+
+.registration-form.active,
+.login-form.active {
+    display: block;
+}
+
+h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    color: white;
+    margin-bottom: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Стили для радио переключателя роли */
+input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+/* Контейнер выбора роли для компактности */
+.role-selection {
+    margin-bottom: 20px;
+}
+
+.role-selection label {
+    display: inline;
+    margin-right: 15px;
+}
+
+/* Стили ошибок */
+.error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Кнопки и поля формы */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #8a2be2;
+    background: rgba(30, 144, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.4);
+    transition: box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form select:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(106, 13, 173, 0.8);
+}
+
+form input[type="text"]::placeholder,
+form input[type="email"]::placeholder,
+form input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Кнопка отправки */
+button[type="submit"] {
+    background: linear-gradient(45deg, #6a0dad, #1e90ff);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #8a2be2;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    transform: scale(1.05);
+}
+
+/* Подвал */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
