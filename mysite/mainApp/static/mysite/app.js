@@ -1,4 +1,5 @@
 // Enhanced futuristic platform for English learning
+
 class EnglishFuturePlatform {
     constructor() {
         this.init();
@@ -16,19 +17,11 @@ class EnglishFuturePlatform {
         document.addEventListener('click', (e) => {
             const button = e.target.closest('.feature-btn');
             if (button) {
-                // Если это ссылка с href — разрешаем переход, не показываем alert
-                if (button.tagName === 'A' && button.getAttribute('href')) {
-                    // Можно не вызывать e.preventDefault(), но можно вызвать handleHover для анимации
-                    this.createClickRipple(button);
-                    return; // Ниже alert не показываем и переход разрешаем
-                }
-
                 const action = button.getAttribute('data-action');
                 this.handleFeatureClick(action, button);
                 e.preventDefault();
             }
         });
-
 
         // Add hover effects for feature cards
         const featureCards = document.querySelectorAll('.feature-card');
@@ -36,7 +29,6 @@ class EnglishFuturePlatform {
             card.addEventListener('mouseenter', (e) => {
                 this.handleCardHover(e.target, true);
             });
-            
             card.addEventListener('mouseleave', (e) => {
                 this.handleCardHover(e.target, false);
             });
@@ -60,23 +52,40 @@ class EnglishFuturePlatform {
 
     handleFeatureClick(action, button) {
         console.log('Feature clicked:', action);
-        
-        // Create button click animation
-        this.createClickRipple(button);
-        
-        // Show appropriate message based on action
-        const messages = {
-            'auth': 'Функция авторизации в разработке! 🔐\n\nСкоро будет доступна персонализация обучения с индивидуальными программами.',
-            'dictionary': 'Интерактивный словарь в разработке! 📚\n\nИИ-переводчик с контекстным анализом и голосовым произношением скоро будет готов.',
-            'tests': 'Адаптивная система тестирования в разработке! 🎯\n\nПерсонализированные тесты на основе ИИ с анализом прогресса скоро появятся.',
-            'games': 'Обучающие игры в разработке! 🎮\n\nVR-игры и интерактивные симуляторы для изучения английского скоро будут доступны.'
+
+        const appUrls = {
+            'dictionary': '/dictionary', // замените на реальные URL
+            'tests': '/tests',
+            'games': '/games',
         };
 
-        // Show futuristic alert
-        setTimeout(() => {
-            this.showFuturisticAlert(messages[action] || 'Функция в разработке! ⚡');
-        }, 200);
+        if (!window.isAuthenticated && ['dictionary', 'tests', 'games'].includes(action)) {
+            this.showFuturisticAlert(`
+                <p>Чтобы воспользоваться этой функцией, пожалуйста, зарегистрируйтесь.</p>
+                <a href="${window.registrationUrl}" class="btn-register" style="
+                    display:inline-block;
+                    margin-top:18px;
+                    padding:12px 38px;
+                    background:linear-gradient(45deg, #6A0DAD, #1E90FF);
+                    color:#fff;
+                    border-radius:30px;
+                    font-weight:600;
+                    font-size:16px;
+                    box-shadow:0 2px 12px rgba(138,43,226,0.4);
+                    text-decoration:none;
+                    transition:background 0.3s;
+                ">Перейти к регистрации</a>
+            `);
+            return;
+        }
+
+        // Если пользователь зарегистрирован и для action есть URL — перейти
+        if (window.isAuthenticated && appUrls[action]) {
+            window.location.href = appUrls[action];
+        }
     }
+
+
 
     handleCardHover(card, isEntering) {
         const icon = card.querySelector('.feature-icon div');
@@ -152,7 +161,7 @@ class EnglishFuturePlatform {
             
             // Show special message
             setTimeout(() => {
-                this.showFuturisticAlert('⚡ ЭНЕРГЕТИЧЕСКОЕ ЯДРО АКТИВИРОВАНО! ⚡\n\nСистема обучения получила дополнительную мощность!\nВсе функции платформы работают на максимальной производительности.');
+                this.showFuturisticAlert('⚡ ЭНЕРГЕТИЧЕСКОЕ ЯДРО АКТИВИРОВАНО! ⚡\\n\\nСистема обучения получила дополнительную мощность!\\nВсе функции платформы работают на максимальной производительности.');
             }, 500);
             
             setTimeout(() => {
@@ -169,7 +178,7 @@ class EnglishFuturePlatform {
         if (existingAlert) {
             existingAlert.remove();
         }
-        
+
         // Create custom futuristic alert overlay
         const alertOverlay = document.createElement('div');
         alertOverlay.className = 'futuristic-alert-overlay';
@@ -179,22 +188,22 @@ class EnglishFuturePlatform {
         
         const alertContent = document.createElement('div');
         alertContent.className = 'alert-content';
-        alertContent.innerHTML = message.replace(/\n/g, '<br>');
+        alertContent.innerHTML = message.replace(/\\n/g, '<br>');
         
         const alertButton = document.createElement('button');
         alertButton.className = 'alert-btn';
-        alertButton.innerHTML = '<span>Понятно</span>';
+        alertButton.innerHTML = 'Понятно';
         
         alertBox.appendChild(alertContent);
         alertBox.appendChild(alertButton);
         alertOverlay.appendChild(alertBox);
         document.body.appendChild(alertOverlay);
-        
+
         // Animate in
         requestAnimationFrame(() => {
             alertOverlay.classList.add('show');
         });
-        
+
         // Close functionality
         const closeAlert = () => {
             alertOverlay.classList.remove('show');
@@ -204,12 +213,12 @@ class EnglishFuturePlatform {
                 }
             }, 300);
         };
-        
+
         alertButton.addEventListener('click', closeAlert);
         alertOverlay.addEventListener('click', (e) => {
             if (e.target === alertOverlay) closeAlert();
         });
-        
+
         // Auto close after 8 seconds
         setTimeout(closeAlert, 8000);
     }
@@ -235,11 +244,11 @@ class EnglishFuturePlatform {
                 opacity: 0;
                 transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             }
-            
+
             .futuristic-alert-overlay.show {
                 opacity: 1;
             }
-            
+
             .futuristic-alert {
                 background: linear-gradient(145deg, rgba(15, 15, 35, 0.98), rgba(45, 27, 105, 0.95));
                 border: 2px solid #8A2BE2;
@@ -248,7 +257,7 @@ class EnglishFuturePlatform {
                 max-width: 500px;
                 min-width: 400px;
                 text-align: center;
-                box-shadow: 
+                box-shadow:
                     0 25px 80px rgba(138, 43, 226, 0.6),
                     0 0 100px rgba(30, 144, 255, 0.4),
                     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -256,7 +265,7 @@ class EnglishFuturePlatform {
                 position: relative;
                 overflow: hidden;
             }
-            
+
             .futuristic-alert::before {
                 content: '';
                 position: absolute;
@@ -267,7 +276,7 @@ class EnglishFuturePlatform {
                 background: linear-gradient(90deg, transparent, #8A2BE2, #1E90FF, #8A2BE2, transparent);
                 animation: alertBeam 3s ease-in-out infinite;
             }
-            
+
             .futuristic-alert::after {
                 content: '';
                 position: absolute;
@@ -280,7 +289,7 @@ class EnglishFuturePlatform {
                 animation: alertPulse 2s ease-in-out infinite;
                 pointer-events: none;
             }
-            
+
             .alert-content {
                 color: #ffffff;
                 font-size: 18px;
@@ -291,7 +300,7 @@ class EnglishFuturePlatform {
                 z-index: 1;
                 font-weight: 500;
             }
-            
+
             .alert-btn {
                 background: linear-gradient(45deg, #6A0DAD, #4B0082, #1E90FF);
                 border: none;
@@ -308,7 +317,7 @@ class EnglishFuturePlatform {
                 z-index: 1;
                 box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
             }
-            
+
             .alert-btn::before {
                 content: '';
                 position: absolute;
@@ -319,20 +328,20 @@ class EnglishFuturePlatform {
                 background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
                 transition: left 0.5s ease;
             }
-            
+
             .alert-btn:hover {
                 transform: scale(1.08) translateY(-2px);
                 box-shadow: 0 15px 40px rgba(138, 43, 226, 0.7);
             }
-            
+
             .alert-btn:hover::before {
                 left: 100%;
             }
-            
+
             .alert-btn:active {
                 transform: scale(1.02) translateY(0);
             }
-            
+
             @keyframes alertSlideIn {
                 0% {
                     transform: translateY(-80px) scale(0.8);
@@ -345,18 +354,18 @@ class EnglishFuturePlatform {
                     filter: blur(0);
                 }
             }
-            
+
             @keyframes alertBeam {
                 0% { left: -100%; }
                 50% { left: 100%; }
                 100% { left: 100%; }
             }
-            
+
             @keyframes alertPulse {
                 0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
                 50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
             }
-            
+
             @media (max-width: 480px) {
                 .futuristic-alert {
                     min-width: 90%;
@@ -367,6 +376,7 @@ class EnglishFuturePlatform {
                 }
             }
         `;
+        
         document.head.appendChild(style);
     }
 
@@ -399,7 +409,7 @@ class EnglishFuturePlatform {
                 ripple.remove();
             }
         }, 800);
-        
+
         // Add ripple animation if not exists
         if (!document.querySelector('#ripple-styles')) {
             const style = document.createElement('style');
@@ -420,7 +430,6 @@ class EnglishFuturePlatform {
         for (let i = 0; i < 8; i++) {
             setTimeout(() => {
                 const particle = document.createElement('div');
-                
                 particle.style.cssText = `
                     position: fixed;
                     width: ${Math.random() * 4 + 2}px;
@@ -444,20 +453,20 @@ class EnglishFuturePlatform {
                 }, 2500);
             }, i * 150);
         }
-        
+
         // Add particle animation if not exists
         if (!document.querySelector('#particle-styles')) {
             const style = document.createElement('style');
             style.id = 'particle-styles';
             style.textContent = `
                 @keyframes hoverParticleFloat {
-                    0% { 
-                        opacity: 1; 
-                        transform: translateY(0) scale(1); 
+                    0% {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
                     }
-                    100% { 
-                        opacity: 0; 
-                        transform: translateY(-80px) translateX(${Math.random() * 60 - 30}px) scale(0.2); 
+                    100% {
+                        opacity: 0;
+                        transform: translateY(-80px) translateX(${Math.random() * 60 - 30}px) scale(0.2);
                     }
                 }
             `;
@@ -469,7 +478,7 @@ class EnglishFuturePlatform {
         const rect = orb.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        
+
         for (let i = 0; i < 16; i++) {
             const particle = document.createElement('div');
             const angle = (i * 22.5) * Math.PI / 180;
@@ -489,16 +498,16 @@ class EnglishFuturePlatform {
                 top: ${centerY}px;
                 transform: translate(-50%, -50%);
             `;
-            
+
             // Animate the particle
             particle.animate([
-                { 
-                    opacity: 1, 
+                {
+                    opacity: 1,
                     transform: 'translate(-50%, -50%) scale(1)',
-                    filter: 'brightness(2)' 
+                    filter: 'brightness(2)'
                 },
-                { 
-                    opacity: 0, 
+                {
+                    opacity: 0,
                     transform: `translate(-50%, -50%) translateX(${Math.cos(angle) * distance}px) translateY(${Math.sin(angle) * distance}px) scale(0.1)`,
                     filter: 'brightness(0.5)'
                 }
@@ -506,7 +515,7 @@ class EnglishFuturePlatform {
                 duration: 2000,
                 easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
             });
-            
+
             document.body.appendChild(particle);
             
             setTimeout(() => {
@@ -525,7 +534,7 @@ class EnglishFuturePlatform {
             card.style.transform = 'translateY(60px)';
             card.style.transition = `all 0.8s cubic-bezier(0.23, 1, 0.32, 1) ${index * 0.2}s`;
         });
-        
+
         // Trigger initial animations after a short delay
         setTimeout(() => {
             featureCards.forEach(card => {
@@ -551,15 +560,14 @@ class EnglishFuturePlatform {
             pointer-events: none;
             z-index: 1;
         `;
-        
         document.body.appendChild(particleContainer);
-        
+
         for (let i = 0; i < 25; i++) {
             setTimeout(() => {
                 this.createFloatingParticle(particleContainer);
             }, i * 300);
         }
-        
+
         // Continuously create new particles
         setInterval(() => {
             this.createFloatingParticle(particleContainer);
@@ -594,26 +602,26 @@ class EnglishFuturePlatform {
                 particle.remove();
             }
         }, (duration + delay) * 1000);
-        
+
         // Add floating animation if not exists
         if (!document.querySelector('#floating-styles')) {
             const style = document.createElement('style');
             style.id = 'floating-styles';
             style.textContent = `
                 @keyframes floatingParticle {
-                    0% { 
-                        transform: translateY(100vh) translateX(0) rotate(0deg); 
-                        opacity: 0; 
+                    0% {
+                        transform: translateY(100vh) translateX(0) rotate(0deg);
+                        opacity: 0;
                     }
-                    10% { 
-                        opacity: var(--particle-opacity, 0.8); 
+                    10% {
+                        opacity: var(--particle-opacity, 0.8);
                     }
-                    90% { 
-                        opacity: var(--particle-opacity, 0.8); 
+                    90% {
+                        opacity: var(--particle-opacity, 0.8);
                     }
-                    100% { 
-                        transform: translateY(-100px) translateX(${Math.random() * 300 - 150}px) rotate(360deg); 
-                        opacity: 0; 
+                    100% {
+                        transform: translateY(-100px) translateX(${Math.random() * 300 - 150}px) rotate(360deg);
+                        opacity: 0;
                     }
                 }
             `;
