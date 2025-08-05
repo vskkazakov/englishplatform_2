@@ -54,36 +54,28 @@ class EnglishFuturePlatform {
         console.log('Feature clicked:', action);
 
         const appUrls = {
-            'dictionary': '/dictionary', // замените на реальные URL
+            'dictionary': '/dictionary',
             'tests': '/tests',
             'games': '/games',
+            'students': '/students' // URL для учителей
         };
 
-        if (!window.isAuthenticated && ['dictionary', 'tests', 'games'].includes(action)) {
+        // Проверяем, авторизован ли пользователь для защищённых функций
+        if (!window.isAuthenticated && ['dictionary', 'tests', 'games', 'students'].includes(action)) {
             this.showFuturisticAlert(`
-                <p>Чтобы воспользоваться этой функцией, пожалуйста, зарегистрируйтесь.</p>
-                <a href="${window.registrationUrl}" class="btn-register" style="
-                    display:inline-block;
-                    margin-top:18px;
-                    padding:12px 38px;
-                    background:linear-gradient(45deg, #6A0DAD, #1E90FF);
-                    color:#fff;
-                    border-radius:30px;
-                    font-weight:600;
-                    font-size:16px;
-                    box-shadow:0 2px 12px rgba(138,43,226,0.4);
-                    text-decoration:none;
-                    transition:background 0.3s;
-                ">Перейти к регистрации</a>
+            Чтобы воспользоваться этой функцией, пожалуйста, зарегистрируйтесь.
+            <br><a href="${window.registrationUrl}" style="color:#8A2BE2; text-decoration: underline;">Перейти к регистрации</a>
             `);
             return;
         }
 
-        // Если пользователь зарегистрирован и для action есть URL — перейти
+        // Если есть URL для действия — переходим по нему
         if (window.isAuthenticated && appUrls[action]) {
             window.location.href = appUrls[action];
         }
     }
+
+
 
 
 

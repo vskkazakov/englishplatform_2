@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'games',
     'tests',
     'dictionary',
-    'authen'
+    'authen',
+    'students'
 ]
 
 MIDDLEWARE = [

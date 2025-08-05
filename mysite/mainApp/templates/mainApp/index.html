@@ -51,22 +51,30 @@
 
             <section class="features">
                 <div class="features-grid">
-                    <div class="feature-card feature-btn" data-action="dictionary">
+                    <div class="feature-card feature-btn" data-action="dictionary" >
                         <div class="feature-icon"><div class="icon-dictionary"></div></div>
                         <div class="feature-title">Словарь</div>
-                        <div class="feature-desc">Интерактивный словарь с AI-переводом</div>
+                        <div class="feature-description">Интерактивный словарь с AI-переводом</div>
                     </div>
-                    <div class="feature-card feature-btn" data-action="tests">
+                    <div class="feature-card feature-btn" data-action="tests" >
                         <div class="feature-icon"><div class="icon-tests"></div></div>
                         <div class="feature-title">Тесты</div>
-                        <div class="feature-desc">Адаптивные тесты для проверки знаний</div>
+                        <div class="feature-description">Адаптивные тесты для проверки знаний</div>
                     </div>
-                    <div class="feature-card feature-btn" data-action="games">
+                    <div class="feature-card feature-btn" data-action="games" >
                         <div class="feature-icon"><div class="icon-games"></div></div>
                         <div class="feature-title">Игры</div>
-                        <div class="feature-desc">Обучающие игры с элементами VR</div>
+                        <div class="feature-description">Обучающие игры с элементами VR</div>
                     </div>
+                    {% if is_teacher %}
+                    <div class="feature-card feature-btn" data-action="students" >
+                        <div class="feature-icon"><div class="icon-students"></div></div>
+                        <div class="feature-title">Ученики</div>
+                        <div class="feature-description">Список и управление учениками</div>
+                    </div>
+                    {% endif %}
                 </div>
+
             </section>
         </div>
     </main>
