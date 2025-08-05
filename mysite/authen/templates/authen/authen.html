@@ -2,49 +2,333 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация — Английский Онлайн</title>
+    <title>{% if show_registration %}Регистрация{% else %}Вход{% endif %} — Английский Онлайн</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f7f2fa; }
-        .header-bar { background: #6610f2; }
-        .register-card {
-            max-width: 400px;
-            margin: 60px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(80,30,120,0.07);
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=gupLWCL1vPgBqYCbJySyJe8oIQkAgJDRG-6qgOGaoX51f_r-iesO3nbtgupdN0t5QL3f7yQhmC6E4XT1KWA8Zl9TY-pHTounZvsnXet3BwRux7WYT_pZF2WHqq0C9Cqej_hhDbh7jQD38fjl4CuQEO3oucXa_OkfT0Sr2eGVzQqlxrJlOc305nuaNpjMipTYgxLwfQisnbxLhOzCiPkvavS63r-5adb2ffv3n8bcTpGoIaC_xFvM_orWgCD6HBIeUzAWhKmyYF7Au3vM6gg5UDjjbERHHmcEEffMq6HHMwkVT117H8jiYCZQZzQ_1K_YvoIEIsppKdNIYK6G52EWAamSe_cx3idqJ_2kHDFdLfZaDxb1cAcbBtdcDuxGJ1UelCR_KrzbkFJTLY6qXheJ2v-vmv9Ae6sGXh4Si9tcCuEp67tF9SZQZLfVJsapxOU9GjPghPRPVKXO82F87PTJEc027ZjVr-DomtWhd0jIVg9GoB7slGkHeWz0oMzpKP5ZsjCRN6V47Fn-UkeFD_lpMRTVJOSSdUqnXMdgru7iKvqsSMrpt_DWzTo4YMcrBnHJgKLcBmfEJ9FI851OALCUSEGlgei8s3Z22elQnj1L8Gf_4X0GULfUrDjRkKON4CxQH8RvWe3etmyL2EIq05Pk65bRSmsfIPIaFsGhhJxMIvHNpC-YLAo6cALEfAyZ-j-WaR-DmzLLzSIXFW5ihyNmACx9VvWkf6zYTgwJtM4-15ATQwpvqlwplJ1sxkpyrFTm6sJDwmeMG60oNVUZzneqGUokObRL-r5vqF3-FVps6XBQH7BmBEydwklngRHGTpvXPfkfAz7KyJVHrBn7VMhuRZnHmu1lidPl0MKilKJtnVxDcH68V_VEeWqLO_iQAMwJ9BAH5E8zyDtlgAtwqiSQ6Zmzh2CS7ZmBblWbFBaPWajQM5mV4jAegZEkw4Ls42YWeXMB-Bwv9dsVG0n93itF3NcDDIv69bRigUeQE0EsO3_aFr28M10hIHRG3vrFJQ8TAdHMSXFt4ukoxtwe06LwaIf75ktfYnAFlCyAEogTHhT6mLFvEtNyg_VuFpajdMV2Ff-d3noyQE_ba_MOQaF2hCQKlzoREeGJ4NQD5mDotmupH1a0z3xUGirA3hqSWqrSYcqTpdNUzrsiMQ9Q2BxFgtW08hZCyWH00-iZ_4QrQbL06xBm0QU1kn0Fx1yv7I0S0S3s-JWi4YTYRHO3bXXZ_xk78mA-vyeo51QXuSwtv3mfMFRNPtui42OzlXNsL24hnp2132H5VXNHGYa2ZjweG0BnLIpsNNimkfQmHugtIy-ppnVNiWq_4h77fMy9fQB593XFYepRpJJxJRa0N0Yb6CN5GF4YQkzKro2qufJeIDeAVRvIwdjULUjcY2RL42Y4wRfln5KoFXVDPaJEfmDvEOVw4sN0cEQ_D4aCrsPgENOvDQ04G5tePWzDKH3OpipUtGngEaQltR-XENO0JHRSLxlCIEAbA9L1zPzNhxTuskZY6DGSEG9KP0MGSHcob-g4ATtIrKUELq1PGappzeWEEv7XDnGg2P9d1CCAZNie7pTM07HXByQrM83mw54VTo0mAKxa_-jUXxmeB4OgMLhIFTu_32Ka2oBabXQowKKkoP9-Gf4CDz38KRdX1GTBRPip8zDX2fLp2Ta_3sEAXxFoiwOlXO0yvPfJWzMYBHLXp8RZMEYU-yCCv92WvNYFCwOqUwHJNr9QNWGAgA4dngwmA_FNVFCGwSO92DDC7B62j37OdwwqwFT89a6tF3X_6BTXgu1IbekGfErVim88lxdiRHEt0fvMXgNeHRBi6k-0acux4c7YafOml1pDpiYxdTXF9iunnQLwlw992dcDBDBSXlmpImNp-MI2ilB1SY8mzlRB0zSzYJKpdKe_0gLueFSS1gJPpUIXg_6siaDR6-7KQwSOMzfwKLZjayMSaTXadDFMZs-VU6KOmyd2tL4Rt67yqM8pE5cqt3sjJa0FsmbHOCV3f6qBZ3awj-Q7qgovu_J5tYQlgOcxA1ocbYAsS3AHmD2Vn7KpMOXMiWQFg4LG4XiAhm3XK0GLTty-jlonACzhegez6E_yWnFm6dmXCBNZhhr7zcljlkHO1G2hoizxtNctEJUgriEq0Bn8GfIhXcNPE9AVOOz2IPjIU4HRMZIOArNrNOTzqjPoXK-nncVCazfXS-UDIwfzF1fgDeIIWDUwxKua2NUYUjXPVi7DQsRXoLVGyi_LLX4q2NwP-UQ4n8vJiJBLj9L_CDtR1PAj2aY" charset="UTF-8"></script><style>
+        body { 
+            background: linear-gradient(135deg, #f7f2fa 0%, #e8f5e8 100%);
+            min-height: 100vh;
+        }
+        .header-bar { 
+            background: linear-gradient(90deg, #6610f2 0%, #8e2de2 100%);
+            box-shadow: 0 2px 10px rgba(102, 16, 242, 0.3);
+        }
+        .auth-card {
+            max-width: 450px;
+            margin: 40px auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(80, 30, 120, 0.15);
+            background: white;
+            border: none;
+        }
+        .toggle-buttons {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        .btn-toggle {
+            border-radius: 8px !important;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-toggle.active {
+            background: #6610f2 !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(102, 16, 242, 0.3);
+        }
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #6610f2;
+            box-shadow: 0 0 0 0.2rem rgba(102, 16, 242, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #6610f2, #8e2de2);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 16, 242, 0.4);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+            font-weight: 500;
+        }
+        .form-section {
+            padding: 30px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .error-text {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+        .success-icon {
+            color: #28a745;
+            margin-right: 8px;
+        }
+        .error-icon {
+            color: #dc3545;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <!-- Верхняя панель -->
-    <nav class="navbar header-bar shadow p-3">
+    <nav class="navbar header-bar shadow-sm p-3">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 text-white">Английский Онлайн</span>
+            <span class="navbar-brand mb-0 h1 text-white fw-bold">
+                <i class="fas fa-graduation-cap me-2"></i>Английский Онлайн
+            </span>
+            {% if user.is_authenticated %}
+                <div class="text-white">
+                    <span class="me-3">
+                        <i class="fas fa-user me-1"></i>Привет, {{ user.first_name }}!
+                    </span>
+                    <a href="{% url 'authen:logout' %}" class="text-white text-decoration-none">
+                        <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </nav>
 
-    <!-- Форма регистрации -->
+    <!-- Сообщения -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {% if message.tags == 'success' %}
+                        <i class="fas fa-check-circle success-icon"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="fas fa-exclamation-triangle error-icon"></i>
+                    {% elif message.tags == 'info' %}
+                        <i class="fas fa-info-circle me-2"></i>
+                    {% endif %}
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Основной контент -->
     <div class="container">
-        <div class="card register-card p-4">
-            <h2 class="mb-4 text-center text-primary">Регистрация</h2>
-            <form>
-                <div class="mb-3">
-                    <label for="inputName" class="form-label">Имя</label>
-                    <input type="text" class="form-control" id="inputName" placeholder="Ваше имя">
+        <div class="card auth-card">
+            <!-- Переключатель между формами -->
+            <div class="p-4 pb-0">
+                <div class="toggle-buttons d-flex justify-content-center mb-4">
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" 
+                                class="btn btn-toggle {% if show_registration %}active{% endif %}" 
+                                id="register-btn" 
+                                onclick="showRegistration()">
+                            <i class="fas fa-user-plus me-2"></i>Регистрация
+                        </button>
+                        <button type="button" 
+                                class="btn btn-toggle {% if not show_registration %}active{% endif %}" 
+                                id="login-btn" 
+                                onclick="showLogin()">
+                            <i class="fas fa-sign-in-alt me-2"></i>Вход
+                        </button>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="example@email.com">
-                </div>
-                <div class="mb-3">
-                    <label for="inputPassword" class="form-label">Пароль</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Пароль">
-                </div>
-                <button type="submit" class="btn btn-primary w-100" disabled>Зарегистрироваться</button>
-            </form>
+            </div>
+
+            <!-- Форма регистрации -->
+            <div id="registration-form" 
+                 class="form-section" 
+                 {% if not show_registration %}style="display: none;"{% endif %}>
+                <h3 class="text-center text-primary mb-4">
+                    <i class="fas fa-user-plus me-2"></i>Создать аккаунт
+                </h3>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="register" value="1">
+
+                    <div class="mb-3">
+                        <label for="{{ registration_form.first_name.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-user me-1"></i>{{ registration_form.first_name.label }}
+                        </label>
+                        {{ registration_form.first_name }}
+                        {% if registration_form.first_name.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ registration_form.first_name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ registration_form.email.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-envelope me-1"></i>{{ registration_form.email.label }}
+                        </label>
+                        {{ registration_form.email }}
+                        {% if registration_form.email.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ registration_form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ registration_form.password1.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-lock me-1"></i>{{ registration_form.password1.label }}
+                        </label>
+                        {{ registration_form.password1 }}
+                        {% if registration_form.password1.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ registration_form.password1.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ registration_form.password2.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-lock me-1"></i>{{ registration_form.password2.label }}
+                        </label>
+                        {{ registration_form.password2 }}
+                        {% if registration_form.password2.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ registration_form.password2.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-user-plus me-2"></i>Зарегистрироваться
+                    </button>
+                </form>
+            </div>
+
+            <!-- Форма входа -->
+            <div id="login-form" 
+                 class="form-section" 
+                 {% if show_registration %}style="display: none;"{% endif %}>
+                <h3 class="text-center text-primary mb-4">
+                    <i class="fas fa-sign-in-alt me-2"></i>Войти в систему
+                </h3>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="login" value="1">
+
+                    <div class="mb-3">
+                        <label for="{{ login_form.email.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-envelope me-1"></i>{{ login_form.email.label }}
+                        </label>
+                        {{ login_form.email }}
+                        {% if login_form.email.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ login_form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ login_form.password.id_for_label }}" 
+                               class="form-label">
+                            <i class="fas fa-lock me-1"></i>{{ login_form.password.label }}
+                        </label>
+                        {{ login_form.password }}
+                        {% if login_form.password.errors %}
+                            <div class="error-text">
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                {{ login_form.password.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i>Войти
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                <i class="fas fa-shield-alt me-1"></i>
+                Ваши данные защищены и сохраняются в PostgreSQL
+            </small>
         </div>
     </div>
 
+    <!-- Подключаем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function showRegistration() {
+            // Переключаем формы
+            document.getElementById('registration-form').style.display = 'block';
+            document.getElementById('login-form').style.display = 'none';
+
+            // Переключаем активные кнопки
+            document.getElementById('register-btn').classList.add('active');
+            document.getElementById('login-btn').classList.remove('active');
+
+            // Меняем заголовок страницы
+            document.title = 'Регистрация — Английский Онлайн';
+        }
+
+        function showLogin() {
+            // Переключаем формы
+            document.getElementById('registration-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+
+            // Переключаем активные кнопки
+            document.getElementById('register-btn').classList.remove('active');
+            document.getElementById('login-btn').classList.add('active');
+
+            // Меняем заголовок страницы
+            document.title = 'Вход — Английский Онлайн';
+        }
+
+        // Автоматически скрывать сообщения через 5 секунд
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+
+        // Добавляем анимацию при отправке формы
+        document.addEventListener('DOMContentLoaded', function() {
+            var forms = document.querySelectorAll('form');
+            forms.forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    var submitBtn = form.querySelector('button[type="submit"]');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Обработка...';
+                    submitBtn.disabled = true;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
