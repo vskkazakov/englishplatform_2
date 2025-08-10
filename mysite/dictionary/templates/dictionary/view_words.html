@@ -1,0 +1,415 @@
+<!-- templates/dictionary/view_words.html - Просмотр всех слов -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои слова - Английский Словарь</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=yvJs5U7fowy7kAk6HCoKQ_MHNiFITiy8UT9m1qXTe3Nbduozxw2E56TV5WcMUNFQynHFn0dfeGgsiLIU3hLZsQ8pIjQuTySW6-E6b2uRVwZTyHb2Lz8KmuEohFeiwocZEmVxtB3k1YWfB2FNLkV_q3FL7XUBlI9UME2Ljwb8wfng64P_6jDP-Hfb_zLfYMqNMIHnEjaFM0GG0o61O2OrD9y_cEDDLI6wo-NTdRG3KiCcBL31WZaObD33WW0vO1LPjbeo3r1WZ-wFFcZ3GgA-HVK8kx6Lw9nxsezI84KZORkvNdn9hvZujkZt8oY-woFYBZen5w7_lsaiw_nrnC6jplKCvXe0vB2PX7yWAP30Wx3wsZlikZgQnWeYFzg2LBvr7KI67DCx6mR6a1TFdtTrbjRd50ovhWb8TEdW_8SV-qL_By6U3m4RQFQjQxKlUwQzWpZkvVSjItJlB-ZQMKYuPNy52Aybu72OETcIciM_5Mw-yEnfDiQvwrqVWMbqEw9n-8DijJqcWs7leoYKUvTxG2ZKeEflXaDamYonkgA-ab4nIHYZEh9zYa4I5NQQ92QE3lUN9BMYotwQu_p_EWrV0HwUDUV_Ugbj4adtsygXI-a84yAajI2PAxaz-qGKxZrYsPmv6nNj5mGnJb_nKcjKvrqgrDdmXSIFUujqfMLOqPmdaaGk_g7vWs7aEd9uDPKkIY8gf0syDMkhx8B-F_jOJ2LHMAN3SxKxRguV68-EKHZTEZph98gYVdppklRZOiCQ8nw3wpgS4R1XUxjPYUbmSV16-N1V5lNYPnMd1BgJdHursEwf0IrkgnBkKS-ugywHWTt-tS9VqMM2nvicC41ayMyhju1_S8JpGypuai9ItAe7SBxYVsaXjrZxqPpfWfPoq8Rkf3dMfN-t6IMrcRWdApSDnDedBCBuNdJFpHMWh-LT94OCoAGyi0txza6Ohn4TcLolr5yrgQhjBnDuT6Kq9oV0jbRLUiCNfaW8vLP_afiXYPU_1HCCQsbu3LsysgozN8cg1zsW-TdQ2HJI9VpmWQ1SjIvBzvb53QIrP6JJMPHkzLTRkvX0WdrRT-8pSXySOy5ZGImBTVe3KEPoBuQUIciEAQ2h81AYPiXqq2A5DosOojcls0Y1WrlTEM0Uk8J21P2ETWgBqEk5BkqmbbXcQ8NfjKdOmoW7HqrMOxxiuursH7_yPQl2dY9c8GNcJcheMOKjlKxZ4GhumRdmCQBJKvdCWYW2jLAGWWSPZz7yQi-JMxWWunVfL8qnszE4lT82M56p5FZe-bi4uPt64GT4VwpEEEgBMKjenpnkkqhYRf3pnw6crkJ5u8kjpJ_oTMDjTFhL1ZSMIZYetGnMXFvsZB3_bMkGi1NhWRsROUPtWofbXRi5D_9weuBULLjHF6cRyi7_u-Cehel-Nx7wArAHIDg0ZcO4cbFeDFAh-DOcm9XpIFgo5iOBmpWhjKrk5i6H-fBXZFpaJIog_2WtTlT0BcLI874UphmSkPEX1S-HbsPlpcmj1kTLl5FVEbzmJWEqLO7ddRSH4Y2JCPtxJkg77TQRb0n7yHwpAqK41dusUi8bQ11xNWYYtz1E-xNocYHFN6LqdZWCwZ0pJfVuKouFLvoS-FmYIMdZ2E62owaD2Qod4i161ygcGNG8-Gye8J3sJBbHwMXHvm4ETJB_2wQnt8ybPUrxyLq2zc9b_Rl8Z07xvQd1NAhnMcFeuemMsZFrSQ0rVhsz7p6GyPDeN2zmAvA1sdvh52xPV-yquZ5ikJ85lu-fkBdazh4Bwr57OGKbuH_iuw8qQs5wAYfrnaL9eIK0i-ZLX8m7hhi2C9HR2S0E4-8jdcBHc5aO7ImJH90xIK5dDHgk7nSX56ygF-NnYi-M-jWGnmdAilaJvD8FRscMICMTvrwUyxFq-BgVLW3eZ9emIIzdr9gZGvhk6A1QWDfpMtVkot4-TCsZE9Ygpl6j5HwPQK9uBfMUPM361Ng9v8IDx30YOHhaFB6211_Ecm7aZ3Ur_3tMRXWWInfyhsqZLUBBqPp_jyHc3bEWHgfYGSBmXSIwU2hN4VQYlpGGFO8kRPfqkAKwouegPYIHIB0UBa66gAMngEDie8yq55s3dT1PIqIjEzfqQ5fpUfUx0pUGTyIFVj6G7JF4FS89tJovFqToIzsxS03nbzMKBynXvJZnf3ephanb0Bdzaz02abOWZWOdj7M4jAC350_hfbrJnNJpm9fpyY4jx7XfO2ppAAcyRb7pv-Dtqr6DqVxi_gVmMLazWIeGX8yyM9P0E7ONZYETDyv_M2atpgqyIFBlPHZXTWDNXiEvrg0m5dfVUA" charset="UTF-8"></script><style>
+        .word-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .word-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .word-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .word-card:hover .word-actions {
+            opacity: 1;
+        }
+        .category-badge {
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dictionary:index' %}">
+                <i class="fas fa-book"></i> Английский Словарь
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text me-3">
+                        Привет, {{ user.first_name|default:user.username }}!
+                    </span>
+                    <a class="nav-link" href="{% url 'authen:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'dictionary:index' %}">
+                        <i class="fas fa-home"></i> Словарь
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">Мои слова</li>
+            </ol>
+        </nav>
+
+        <!-- Заголовок и статистика -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1><i class="fas fa-list text-primary"></i> Мои слова</h1>
+                <p class="text-muted">
+                    Найдено: {{ total_filtered }} слов{% if total_filtered != total_words %} из {{ total_words }}{% endif %}
+                    {% if learned_filtered > 0 %}
+                        | Изучено: {{ learned_filtered }} ({{ learned_filtered|floatformat:0 }}%)
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{% url 'dictionary:add_word' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Добавить слово
+                </a>
+            </div>
+        </div>
+
+        <!-- Фильтры и поиск -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-filter text-primary"></i> Поиск и фильтры
+                    <button class="btn btn-sm btn-outline-primary float-end" type="button" 
+                            data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </h6>
+            </div>
+            <div class="collapse show" id="filtersCollapse">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            {{ search_form.search_query.label_tag }}
+                            {{ search_form.search_query }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ search_form.category.label_tag }}
+                            {{ search_form.category }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ search_form.difficulty_level.label_tag }}
+                            {{ search_form.difficulty_level }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ search_form.status.label_tag }}
+                            {{ search_form.status }}
+                        </div>
+                        <div class="col-md-2">
+                            {{ search_form.sort_by.label_tag }}
+                            {{ search_form.sort_by }}
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Найти
+                            </button>
+                            <a href="{% url 'dictionary:view_words' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i> Очистить
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список слов -->
+        {% if words %}
+            <div class="row">
+                {% for word in words %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card word-card h-100">
+                            <div class="card-body">
+                                <!-- Статус изученности -->
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        {% if word.is_learned %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Изучено
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Изучается</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="word-actions">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary btn-sm" 
+                                                    onclick="toggleLearned({{ word.id }})"
+                                                    title="{% if word.is_learned %}Отметить как не изученное{% else %}Отметить как изученное{% endif %}">
+                                                <i class="fas {% if word.is_learned %}fa-times{% else %}fa-check{% endif %}"></i>
+                                            </button>
+                                            <a href="{% url 'dictionary:edit_word' word.id %}" 
+                                               class="btn btn-outline-warning btn-sm" title="Редактировать">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-outline-danger btn-sm" 
+                                                    onclick="deleteWord({{ word.id }}, '{{ word.english_word }}')"
+                                                    title="Удалить">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Основное содержимое -->
+                                <h5 class="card-title text-primary">
+                                    {{ word.english_word }}
+                                    {% if word.transcription %}
+                                        <small class="text-muted">{{ word.transcription }}</small>
+                                    {% endif %}
+                                </h5>
+                                
+                                <p class="card-text">
+                                    <strong>{{ word.russian_translation }}</strong>
+                                </p>
+
+                                {% if word.definition %}
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="fas fa-quote-left"></i> {{ word.definition }}
+                                        </small>
+                                    </p>
+                                {% endif %}
+
+                                {% if word.example_sentence %}
+                                    <p class="card-text">
+                                        <small class="text-info">
+                                            <i class="fas fa-comment"></i> {{ word.example_sentence }}
+                                        </small>
+                                    </p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="card-footer bg-transparent">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-info category-badge me-1">
+                                            {{ word.get_category_display }}
+                                        </span>
+                                        <span class="badge bg-warning category-badge">
+                                            {{ word.get_difficulty_level_display }}
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">
+                                        {% if word.times_practiced > 0 %}
+                                            <i class="fas fa-redo"></i> {{ word.times_practiced }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <small class="text-muted">
+                                    Добавлено: {{ word.created_at|date:"d.m.Y" }}
+                                    {% if word.last_practiced %}
+                                        | Изучалось: {{ word.last_practiced|date:"d.m.Y" }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Пагинация -->
+            {% if words.has_other_pages %}
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination justify-content-center">
+                        {% if words.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ words.previous_page_number }}">
+                                    <i class="fas fa-chevron-left"></i> Предыдущая
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in words.paginator.page_range %}
+                            {% if words.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > words.number|add:'-3' and num < words.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if words.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ words.next_page_number }}">
+                                    Следующая <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+
+        {% else %}
+            <!-- Пустое состояние -->
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-5x text-muted mb-4"></i>
+                <h3 class="text-muted">Слова не найдены</h3>
+                {% if request.GET %}
+                    <p class="text-muted mb-4">
+                        Попробуйте изменить параметры поиска или 
+                        <a href="{% url 'dictionary:view_words' %}">очистить фильтры</a>
+                    </p>
+                {% else %}
+                    <p class="text-muted mb-4">У вас еще нет слов в словаре</p>
+                {% endif %}
+                <a href="{% url 'dictionary:add_word' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Добавить первое слово
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтвердите удаление</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить слово "<span id="wordToDelete"></span>"?</p>
+                    <p class="text-muted">Это действие нельзя отменить.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Сообщения -->
+    {% if messages %}
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+            {% for message in messages %}
+                <div class="toast show" role="alert">
+                    <div class="toast-header">
+                        <strong class="me-auto">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle text-success"></i> Успех
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle text-danger"></i> Ошибка
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-triangle text-warning"></i> Внимание
+                            {% else %}
+                                <i class="fas fa-info-circle text-info"></i> Информация
+                            {% endif %}
+                        </strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Автоматическое скрытие уведомлений
+        setTimeout(function() {
+            var toasts = document.querySelectorAll('.toast');
+            toasts.forEach(function(toast) {
+                var bsToast = new bootstrap.Toast(toast);
+                bsToast.hide();
+            });
+        }, 5000);
+
+        // Переключение статуса изученности
+        function toggleLearned(wordId) {
+            fetch(`/dictionary/word/${wordId}/toggle-learned/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Ошибка при обновлении статуса слова');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при обновлении статуса слова');
+            });
+        }
+
+        // Удаление слова
+        let wordToDeleteId = null;
+
+        function deleteWord(wordId, wordName) {
+            wordToDeleteId = wordId;
+            document.getElementById('wordToDelete').textContent = wordName;
+            var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            if (wordToDeleteId) {
+                fetch(`/dictionary/word/${wordToDeleteId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при удалении слова');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ошибка при удалении слова');
+                });
+            }
+        });
+
+        // Добавляем CSRF токен для AJAX запросов
+        function addCSRFToken() {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = 'csrfmiddlewaretoken';
+                tokenInput.value = '{{ csrf_token }}';
+                document.body.appendChild(tokenInput);
+            }
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            addCSRFToken();
+        });
+    </script>
+</body>
+</html>
