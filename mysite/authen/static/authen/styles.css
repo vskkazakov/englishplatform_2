@@ -205,3 +205,29 @@ footer {
     color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
 }
+
+.resend-btn {
+    background: transparent;
+    border: 1px solid #6a0dad;
+    color: #6a0dad;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.resend-btn:hover {
+    background: rgba(106, 13, 173, 0.1);
+}
+
+/* Стили для этапов */
+.auth-container p {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+    font-size: 18px;
+}

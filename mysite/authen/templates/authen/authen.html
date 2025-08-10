@@ -25,92 +25,163 @@
             </div>
         {% endif %}
 
-        <div class="auth-container">
-            <div class="tab-buttons">
-                <button class="tab-btn {% if show_registration %}active{% endif %}" onclick="showRegistration()">Регистрация</button>
-                <button class="tab-btn {% if not show_registration %}active{% endif %}" onclick="showLogin()">Вход</button>
-            </div>
+        {% if stage == 'initial' %}
+            <!-- Начальный этап - выбор регистрации/входа -->
+            <div class="auth-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn {% if show_registration %}active{% endif %}" onclick="showRegistration()">Регистрация</button>
+                    <button class="tab-btn {% if not show_registration %}active{% endif %}" onclick="showLogin()">Вход</button>
+                </div>
 
-            <div class="registration-form {% if show_registration %}active{% endif %}">
-                <h2>Создать аккаунт</h2>
-                <form method="POST" novalidate>
-                    {% csrf_token %}
-                    
-                    {% if registration_form.non_field_errors %}
-                        <div class="error">
-                            {{ registration_form.non_field_errors }}
+                <div class="registration-form {% if show_registration %}active{% endif %}">
+                    <h2>Создать аккаунт</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="register" value="1">
+                        
+                        <div class="form-group">
+                            {{ registration_form.email.label_tag }}
+                            {{ registration_form.email }}
+                            {% for error in registration_form.email.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
                         </div>
-                    {% endif %}
+
+                        <button type="submit">Отправить код</button>
+                    </form>
+                </div>
+
+                <div class="login-form {% if not show_registration %}active{% endif %}">
+                    <h2>Войти в систему</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="login" value="1">
+                        
+                        <div class="form-group">
+                            {{ login_form.email.label_tag }}
+                            {{ login_form.email }}
+                            {% for error in login_form.email.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit">Отправить код</button>
+                    </form>
+                </div>
+            </div>
+        
+        {% elif stage == 'verification' %}
+            <!-- Этап ввода кода подтверждения -->
+            <div class="auth-container">
+                <h2>Подтверждение Email</h2>
+                <p>Код отправлен на <strong>{{ email }}</strong></p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="verify_code" value="1">
                     
                     <div class="form-group">
-                        {{ registration_form.first_name.label_tag }}
-                        {{ registration_form.first_name }}
-                        {% for error in registration_form.first_name.errors %}
+                        {{ code_form.code.label_tag }}
+                        {{ code_form.code }}
+                        {% for error in code_form.code.errors %}
                             <div class="error">{{ error }}</div>
                         {% endfor %}
                     </div>
 
+                    <button type="submit">Подтвердить</button>
+                    <button type="button" class="resend-btn" onclick="resendCode()">Отправить код повторно</button>
+                </form>
+            </div>
+        
+        {% elif stage == 'registration' %}
+            <!-- Этап регистрации после подтверждения email -->
+            <div class="auth-container">
+                <h2>Завершение регистрации</h2>
+                <p>Email: <strong>{{ email }}</strong></p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="register_final" value="1">
+                    
                     <div class="form-group">
-                        {{ registration_form.email.label_tag }}
-                        {{ registration_form.email }}
-                        {% for error in registration_form.email.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+                        <label for="id_first_name">Имя:</label>
+                        <input 
+                            type="text" 
+                            name="first_name" 
+                            class="form-control" 
+                            placeholder="Введите ваше имя" 
+                            required
+                            id="id_first_name">
                     </div>
 
                     <div class="form-group">
-                        {{ registration_form.password1.label_tag }}
-                        {{ registration_form.password1 }}
-                        {% for error in registration_form.password1.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+                        <label for="id_password1">Пароль:</label>
+                        <input 
+                            type="password" 
+                            name="password1" 
+                            class="form-control" 
+                            placeholder="Введите пароль" 
+                            required
+                            id="id_password1">
                     </div>
 
                     <div class="form-group">
-                        {{ registration_form.password2.label_tag }}
-                        {{ registration_form.password2 }}
-                        {% for error in registration_form.password2.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+                        <label for="id_password2">Подтверждение пароля:</label>
+                        <input 
+                            type="password" 
+                            name="password2" 
+                            class="form-control" 
+                            placeholder="Подтвердите пароль" 
+                            required
+                            id="id_password2">
                     </div>
 
                     <div class="form-group role-selection">
-                        {{ registration_form.role.label_tag }}
-                        {{ registration_form.role }}
-                        {% for error in registration_form.role.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+                        <label>Роль:</label>
+                        <div>
+                            <input type="radio" name="role" value="student" id="id_role_0" checked>
+                            <label for="id_role_0" style="display:inline; margin-right:15px;">Ученик</label>
+                            
+                            <input type="radio" name="role" value="teacher" id="id_role_1">
+                            <label for="id_role_1" style="display:inline;">Учитель</label>
+                        </div>
                     </div>
 
-                    <button type="submit" name="register">Зарегистрироваться</button>
+                    <button type="submit">Зарегистрироваться</button>
                 </form>
             </div>
-
-            <div class="login-form {% if not show_registration %}active{% endif %}">
-                <h2>Войти в систему</h2>
-                <form method="POST" novalidate>
+        
+        {% elif stage == 'login' %}
+            <!-- Этап входа после подтверждения email -->
+            <div class="auth-container">
+                <h2>Вход в систему</h2>
+                <p>Email: <strong>{{ email }}</strong></p>
+                
+                <form method="POST">
                     {% csrf_token %}
+                    <input type="hidden" name="login_final" value="1">
+                    
+                    <!-- Скрытое поле для email -->
+                    <input type="hidden" name="email" value="{{ email }}">
                     
                     <div class="form-group">
-                        {{ login_form.email.label_tag }}
-                        {{ login_form.email }}
-                        {% for error in login_form.email.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
-                    </div>
-
-                    <div class="form-group">
-                        {{ login_form.password.label_tag }}
-                        {{ login_form.password }}
+                        <label for="id_password">Пароль:</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            class="form-control" 
+                            placeholder="Введите пароль" 
+                            required
+                            id="id_password">
                         {% for error in login_form.password.errors %}
                             <div class="error">{{ error }}</div>
                         {% endfor %}
                     </div>
 
-                    <button type="submit" name="login">Войти</button>
+                    <button type="submit">Войти</button>
                 </form>
             </div>
-        </div>
+        {% endif %}
 
         <footer>
             <p>Ваши данные защищены и сохраняются в PostgreSQL</p>
@@ -130,6 +201,25 @@
             document.querySelector('.registration-form').classList.remove('active');
             document.querySelectorAll('.tab-btn')[1].classList.add('active');
             document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+        }
+        
+        function resendCode() {
+            fetch("{% url 'authen:resend_code' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Новый код отправлен! Проверьте вашу почту.');
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
         }
     </script>
 </body>

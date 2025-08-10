@@ -4,6 +4,32 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+
+class VerificationCode(models.Model):
+    email = models.EmailField(verbose_name="Email")
+    code = models.CharField(max_length=6, verbose_name="Код подтверждения")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    is_used = models.BooleanField(default=False, verbose_name="Использован")
+    purpose = models.CharField(
+        max_length=10, 
+        choices=[('register', 'Регистрация'), ('login', 'Вход')],
+        verbose_name="Назначение"
+    )
+
+    class Meta:
+        verbose_name = "Код подтверждения"
+        verbose_name_plural = "Коды подтверждения"
+        indexes = [
+            models.Index(fields=['email', 'code']),
+        ]
+
+    def __str__(self):
+        return f"{self.email} - {self.code}"
+    
+    def is_valid(self):
+        from django.utils import timezone
+        return (timezone.now() - self.created_at).seconds < 600 and not self.is_used
+
 class UserProfile(models.Model):
     """
     Расширенный профиль пользователя
