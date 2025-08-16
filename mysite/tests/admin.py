@@ -1,5 +1,12 @@
+# tests/admin.py - ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ ВЕРСИЯ
 from django.contrib import admin
+from django.db import models
+from django.utils.html import format_html
+from django.urls import reverse
+from django.utils import timezone
+from django.db.models import Avg, Count, Q
 from .models import TestSession, TestAnswer
+
 
 @admin.register(TestSession)
 class TestSessionAdmin(admin.ModelAdmin):
@@ -141,6 +148,7 @@ class TestSessionAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('user').prefetch_related('answers__word')
 
+
 @admin.register(TestAnswer)
 class TestAnswerAdmin(admin.ModelAdmin):
     list_display = [
@@ -212,60 +220,7 @@ class TestAnswerAdmin(admin.ModelAdmin):
         )
 
 
-# Кастомная админка с общей статистикой
-class TestStatisticsAdmin(admin.ModelAdmin):
-    """Дополнительная статистика по тестам"""
-    
-    def changelist_view(self, request, extra_context=None):
-        # Общая статистика
-        total_tests = TestSession.objects.filter(is_completed=True).count()
-        total_answers = TestAnswer.objects.count()
-        
-        # Статистика по успешности
-        avg_success = TestSession.objects.filter(
-            is_completed=True
-        ).aggregate(
-            avg_rate=Avg('correct_answers') * 100 / Avg('total_words')
-        )['avg_rate'] or 0
-        
-        # Статистика по пользователям
-        user_stats = TestSession.objects.filter(
-            is_completed=True
-        ).values(
-            'user__username'
-        ).annotate(
-            total_tests=Count('id'),
-            avg_success=Avg('correct_answers') * 100 / Avg('total_words')
-        ).order_by('-total_tests')[:10]
-        
-        # Статистика по категориям (топ-5)
-        popular_categories = TestAnswer.objects.values(
-            'word__category'
-        ).annotate(
-            total_questions=Count('id'),
-            correct_answers=Count('id', filter=Q(is_correct=True))
-        ).order_by('-total_questions')[:5]
-        
-        # Добавляем процент правильных ответов для категорий
-        for cat in popular_categories:
-            if cat['total_questions'] > 0:
-                cat['success_rate'] = int((cat['correct_answers'] / cat['total_questions']) * 100)
-            else:
-                cat['success_rate'] = 0
-        
-        extra_context = extra_context or {}
-        extra_context.update({
-            'title': 'Статистика тестирования',
-            'total_tests': total_tests,
-            'total_answers': total_answers,
-            'avg_success': int(avg_success),
-            'user_stats': user_stats,
-            'popular_categories': popular_categories,
-        })
-        
-        return super().changelist_view(request, extra_context=extra_context)
-
-# Добавляем кастомные действия
+# Кастомные действия
 @admin.action(description='Пересчитать статистику выбранных тестов')
 def recalculate_test_stats(modeladmin, request, queryset):
     """Пересчет статистики тестов"""
