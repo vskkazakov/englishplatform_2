@@ -1,164 +1,140 @@
-<!-- templates/dictionary/add_word.html - Форма добавления слова -->
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - Английский Словарь</title>
+    <title>Добавить новое слово — Английский Словарь</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=bf2-HT07ZzS3taSUhQzSCvuKdjr1muK46tpjY3BEVorBuIm2InYccGpMwXkLiP7e9YB6ofvy1lCeSGTNqwTk9KJobPfS0nsDeAiDQ_HLuNYlyGLnxmHGOEVbNyrAPW2zwxjjGHtEVTzuFYz1zWQgtlY1jA4KLMYQIEGvlIedbMcRc3_R2HturnwWn4_A-kRiGM0dRTA-0-F_3lP_zaxno-pRylBzKzW6v8wKMyEFNdpHzB-IlKC2axbudvgputdWc84xFT-PL5fq1K8Dpmc-Awtpx1gUkDmWZJl3rOvziH7QwaBdOXVnid00IeL0xx85m1TfiZ287kdv-C0HbXHXhlVVrh8u1lKMwutoNvvAdrEWKliyxEhTW-fjNbSsiR54JVwIJTn__5DjnoCjGVx2zUbZqHla6-gM83oEM96PtgqYOAU9DIdT1XXhtrhY7-ZwBZIqXg5S3VcYkfEkiNju14x1ZEdQa3_EIe6QmAp4-cGGLE_S6bPoC250tUrICObDpGhn-hdsyCQ5owNBzBfNmsYR29f9J8d-K_dwQfwfX0DYEem2294y8Qk3mCfYyHcLq3O26OAjNGOoUDqiAcUItYXCLM9HZIfhq8NgJfErqAHPPm1mjvjol9d8ys5KgOOuN76fbP7J1J7N-f2NRShtxmIYlIxn5_5iqt6nQWlNyDOHqqUSrHTjFldZCH1NmhtgykchYSdUEOTqd4t63VlZbuvNKRrhkF06FiJ3cQB_a0gZVw_-Y39GvvCEGAzF_E6yUGBeHoWvuOqoA9jX2EdhRbjzflSC39i64nWsHjlYTCfVj6epA9w_6NvyDmkmNpH_g-wEbYkrj1UORiYQjRsLWmobsufOH07c4R90akRVqN-vBZYRwNkJQG_t8Y2g5WoaESl-F1R6OWU2BPvKsRuc0lqQY2wPUABOVb6WB7L_Me8Pi0_XAKNUjerdBwgVdq7-Y_eHcVCqQJEeRnAxEhrut4OAK3QGrMpdacJn3LWY61zXprxGPZSo7h_yT7_Ui-9j2o5-lb_y9waS9pMkzRfh_pPTYRfYMlNXXh7mShb0nSDI3NNx8CgOGd96XrTiz8yC9av1tionzC3me31U8BILrWwyQIUbRtNcAH-OnErHemUYncdzuM25quS1km1e-8LEUJC_Fx5uOd074QXiD4HgujKwE8a-dPl8HsAkxCxXPd2v8yUWds6bJgHlS56zmZ4_bTm16mxI40oML5Zd2bANtUW3m5H7iDdiVsu34wRcyCtw9RuwQSOFcfhJtlyXWgb7-dy_x_uOfddbDcuD6MPEZAtywmlJ85xHIWYP_r26VGeyHwGnpNOnWjqQrBtlpeI07C_2DeCi7jWQsRFH7TXQHmtlTjBgWRnpy9lCl9kytcDfB4M0jvb1sxxngSsBpRS1WsJ4hJT9llrzT_l7RI3sFXXWXOX2e_4OMstaga1bWf_0IVGZg4FNbM34fNcF-TVfzC-ssrRNj4csVKejMPE0-q8in0JxdyRThHh2-OMcfBMKf1mOqIuNt2KvIRx7HnBj9PnXzvohpcsJVAJtI_qbgdKhJqf02g_J14Q6Y58w8vjWdVYs22xTRmPXjWW5hOvxnj6D6Nw_4zmKYJehHzkPaZwC8pf62K2U6nSOlC7P65Ixmethzjb4ha4LQ7pA4YW8FLwIcS89ot68Cz7YLTQiTyvqgDrlJDOhQECzllI-fG2cMgleU47pdVvLLdLZnFJNI_ukRtSQzLX8Brw1vHPPBNfT1fv6uLDPzZnoDIjvhVBp0ZyZj1ZnKPk0Bg4AH27RRGAuc0Hq8hfmdyQieMprEYRQFtJjPqBNeH_KZTnVJORvsnIqmtSaKZgI9fgvRnIBRSiolvoOw8BbBPWLC4vWkHQBl5n9rvGDxjCdt4Zoy4A0ZkRmCt4yGV3j-nUR1vxrqjWtZ_gysArK568wC9T_iIz9aAF5GlQCT2gZafeJh7XD5nu2qasXbysHaPiFBWp075iUCGpQuKNJ8VDkssrvcOtYLXYG0tcm1CqP7Lu3DJZOKjy_TWTYN34nxWNX5vGXNfEvF-9M-gaxftyGycww4xsDKltL8n_g7LG1H1g7oUJHjhS0a4TNc6gvRLpVAT9d31XDAO0B3WFV1doG3OYs52ShcqdIMQXWwQe3RKW6J7Z95CYffLLC4gA2XGSGINP2P1NVhnicbBa9cytiVm213wN2NxDwsYSZ7xFX_25MeRY6fKaq3bgLNDGXY5dLZHgExjGf8oItIId6-40aQYD4lhjFWJYlnHpMQsQ0Rxs3LD9Qq7uIGcZg4LZvDfS1yUz-7TSNABX60Ij3cJIaQXpNa2w87lerpl3qid3cMrhjfYw" charset="UTF-8"></script></head>
+</head>
 <body class="bg-light">
-    <!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dictionary:index' %}">
-                <i class="fas fa-book"></i> Английский Словарь
-            </a>
-            
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    <span class="navbar-text me-3">
-                        Привет, {{ user.first_name|default:user.username }}!
-                    </span>
-                    <a class="nav-link" href="{% url 'authen:logout' %}">
-                        <i class="fas fa-sign-out-alt"></i> Выйти
-                    </a>
-                {% endif %}
+    <div class="container py-4">
+
+        <div class="row mb-3">
+            <div class="col-12 text-center">
+                <h2 class="mb-1 text-primary"><i class="fas fa-plus"></i> Добавить новое слово</h2>
+                <div class="text-muted">Максимально быстрый ввод нового слова</div>
             </div>
         </div>
-    </nav>
-
-    <div class="container my-4">
-        <!-- Хлебные крошки -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{% url 'dictionary:index' %}">
-                        <i class="fas fa-home"></i> Словарь
-                    </a>
-                </li>
-                <li class="breadcrumb-item active">{{ title }}</li>
-            </ol>
-        </nav>
 
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            <i class="fas fa-plus text-success"></i> {{ title }}
-                        </h4>
+            <div class="col-md-7">
+
+                <form method="post" autocomplete="off" id="wordForm">
+                    {% csrf_token %}
+
+                    <!-- Категория (сразу в начале!) -->
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label fw-bold">
+                            <i class="fas fa-tags text-primary"></i> {{ form.category.label }}
+                        </label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.category.errors.0 }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Выберите категорию, чтобы распределять слова по темам. По категориям будет удобно учить и тестировать!</div>
                     </div>
-                    <div class="card-body">
-                        <form method="post" id="wordForm">
-                            {% csrf_token %}
-                            
-                            <!-- Основные поля -->
-                            <div class="row">
-                                <div class="col-md-6">
+
+                    <hr>
+
+                    <!-- Английское слово и перевод — максимально быстро! -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.english_word.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-language text-primary"></i> {{ form.english_word.label }} *
+                            </label>
+                            {{ form.english_word }}
+                            {% if form.english_word.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.english_word.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.russian_translation.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-globe text-success"></i> {{ form.russian_translation.label }} *
+                            </label>
+                            {{ form.russian_translation }}
+                            {% if form.russian_translation.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.russian_translation.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Кнопка сохранения в упрощённом режиме -->
+                    <div class="d-flex justify-content-end align-items-center my-3">
+                        <button type="submit" class="btn btn-success me-2">
+                            <i class="fas fa-save"></i> Сохранить слово
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo"></i> Очистить
+                        </button>
+                        <a href="{% url 'dictionary:index' %}" class="btn btn-outline-dark ms-2">
+                            <i class="fas fa-arrow-left"></i> Назад
+                        </a>
+                    </div>
+
+                    <hr>
+
+                    <!-- Скрытая секция для опциональных полей -->
+                    <div class="accordion" id="optionalFields">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOptional">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
+                                    Дополнительные параметры (заполняйте, если есть время)
+                                </button>
+                            </h2>
+                            <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#optionalFields">
+                                <div class="accordion-body">
+                                    
+                                    <!-- Транскрипция -->
                                     <div class="mb-3">
-                                        <label for="{{ form.english_word.id_for_label }}" class="form-label">
-                                            <i class="fas fa-language text-primary"></i> 
-                                            {{ form.english_word.label }} *
+                                        <label for="{{ form.transcription.id_for_label }}" class="form-label fw-bold">
+                                            <i class="fas fa-volume-up text-info"></i> {{ form.transcription.label }}
                                         </label>
-                                        {{ form.english_word }}
-                                        {% if form.english_word.errors %}
+                                        {{ form.transcription }}
+                                        {% if form.transcription.errors %}
                                             <div class="text-danger small mt-1">
-                                                {{ form.english_word.errors.0 }}
+                                                {{ form.transcription.errors.0 }}
                                             </div>
                                         {% endif %}
+                                        <div class="form-text">Фонетическая транскрипция поможет правильно произносить слово</div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
+
+                                    <!-- Определение -->
                                     <div class="mb-3">
-                                        <label for="{{ form.russian_translation.id_for_label }}" class="form-label">
-                                            <i class="fas fa-globe text-success"></i> 
-                                            {{ form.russian_translation.label }} *
+                                        <label for="{{ form.definition.id_for_label }}" class="form-label fw-bold">
+                                            <i class="fas fa-book-open text-warning"></i> {{ form.definition.label }}
                                         </label>
-                                        {{ form.russian_translation }}
-                                        {% if form.russian_translation.errors %}
+                                        {{ form.definition }}
+                                        {% if form.definition.errors %}
                                             <div class="text-danger small mt-1">
-                                                {{ form.russian_translation.errors.0 }}
+                                                {{ form.definition.errors.0 }}
                                             </div>
                                         {% endif %}
+                                        <div class="form-text">Определение слова на английском языке</div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <!-- Транскрипция -->
-                            <div class="mb-3">
-                                <label for="{{ form.transcription.id_for_label }}" class="form-label">
-                                    <i class="fas fa-volume-up text-info"></i> 
-                                    {{ form.transcription.label }}
-                                </label>
-                                {{ form.transcription }}
-                                {% if form.transcription.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.transcription.errors.0 }}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">
-                                    Фонетическая транскрипция поможет правильно произносить слово
-                                </div>
-                            </div>
-
-                            <!-- Определение -->
-                            <div class="mb-3">
-                                <label for="{{ form.definition.id_for_label }}" class="form-label">
-                                    <i class="fas fa-book-open text-warning"></i> 
-                                    {{ form.definition.label }}
-                                </label>
-                                {{ form.definition }}
-                                {% if form.definition.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.definition.errors.0 }}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">
-                                    Определение слова на английском языке
-                                </div>
-                            </div>
-
-                            <!-- Пример предложения -->
-                            <div class="mb-3">
-                                <label for="{{ form.example_sentence.id_for_label }}" class="form-label">
-                                    <i class="fas fa-quote-right text-secondary"></i> 
-                                    {{ form.example_sentence.label }}
-                                </label>
-                                {{ form.example_sentence }}
-                                {% if form.example_sentence.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.example_sentence.errors.0 }}
-                                    </div>
-                                {% endif %}
-                                <div class="form-text">
-                                    Пример использования слова в предложении
-                                </div>
-                            </div>
-
-                            <!-- Категория и уровень сложности -->
-                            <div class="row">
-                                <div class="col-md-6">
+                                    <!-- Пример предложения -->
                                     <div class="mb-3">
-                                        <label for="{{ form.category.id_for_label }}" class="form-label">
-                                            <i class="fas fa-tags text-primary"></i> 
-                                            {{ form.category.label }}
+                                        <label for="{{ form.example_sentence.id_for_label }}" class="form-label fw-bold">
+                                            <i class="fas fa-quote-right text-secondary"></i> {{ form.example_sentence.label }}
                                         </label>
-                                        {{ form.category }}
-                                        {% if form.category.errors %}
+                                        {{ form.example_sentence }}
+                                        {% if form.example_sentence.errors %}
                                             <div class="text-danger small mt-1">
-                                                {{ form.category.errors.0 }}
+                                                {{ form.example_sentence.errors.0 }}
                                             </div>
                                         {% endif %}
+                                        <div class="form-text">Пример использования слова в предложении</div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
+
+                                    <!-- Уровень сложности -->
                                     <div class="mb-3">
-                                        <label for="{{ form.difficulty_level.id_for_label }}" class="form-label">
-                                            <i class="fas fa-signal text-warning"></i> 
-                                            {{ form.difficulty_level.label }}
+                                        <label for="{{ form.difficulty_level.id_for_label }}" class="form-label fw-bold">
+                                            <i class="fas fa-signal text-warning"></i> {{ form.difficulty_level.label }}
                                         </label>
                                         {{ form.difficulty_level }}
                                         {% if form.difficulty_level.errors %}
@@ -169,114 +145,38 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Кнопки -->
-                            <div class="d-flex justify-content-between">
-                                <a href="{% url 'dictionary:index' %}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left"></i> Назад
-                                </a>
-                                <div>
-                                    <button type="reset" class="btn btn-outline-secondary me-2">
-                                        <i class="fas fa-undo"></i> Очистить
-                                    </button>
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-save"></i> Сохранить слово
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Подсказки -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-lightbulb text-warning"></i> Полезные советы
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled mb-0">
-                            <li class="mb-2">
-                                <i class="fas fa-check text-success"></i> 
-                                Добавляйте транскрипцию для сложных слов
-                            </li>
-                            <li class="mb-2">
-                                <i class="fas fa-check text-success"></i> 
-                                Используйте примеры предложений для лучшего запоминания
-                            </li>
-                            <li class="mb-2">
-                                <i class="fas fa-check text-success"></i> 
-                                Выбирайте правильную категорию для удобного поиска
-                            </li>
-                            <li>
-                                <i class="fas fa-check text-success"></i> 
-                                Указывайте свой текущий уровень для сложности слова
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Сообщения -->
-    {% if messages %}
-        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
-            {% for message in messages %}
-                <div class="toast show" role="alert">
-                    <div class="toast-header">
-                        <strong class="me-auto">
-                            {% if message.tags == 'success' %}
-                                <i class="fas fa-check-circle text-success"></i> Успех
-                            {% elif message.tags == 'error' %}
-                                <i class="fas fa-exclamation-circle text-danger"></i> Ошибка
-                            {% elif message.tags == 'warning' %}
-                                <i class="fas fa-exclamation-triangle text-warning"></i> Внимание
-                            {% else %}
-                                <i class="fas fa-info-circle text-info"></i> Информация
-                            {% endif %}
-                        </strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        {{ message }}
-                    </div>
+        <!-- Сообщения -->
+        {% if messages %}
+        <div class="row mt-3">
+            <div class="col-md-7 mx-auto">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {% if message.tags == 'success' %}
+                        <strong>Успех!</strong>
+                    {% elif message.tags == 'error' %}
+                        <strong>Ошибка!</strong>
+                    {% elif message.tags == 'warning' %}
+                        <strong>Внимание!</strong>
+                    {% else %}
+                        <strong>Информация:</strong>
+                    {% endif %}
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    {% endif %}
+        {% endif %}
 
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Автоматическое скрытие уведомлений
-        setTimeout(function() {
-            var toasts = document.querySelectorAll('.toast');
-            toasts.forEach(function(toast) {
-                var bsToast = new bootstrap.Toast(toast);
-                bsToast.hide();
-            });
-        }, 5000);
-
-        // Добавление транскрипции в квадратные скобки при вводе
-        document.getElementById('id_transcription').addEventListener('input', function() {
-            let value = this.value.trim();
-            if (value && !value.startsWith('[') && !value.startsWith('/')) {
-                this.value = '[' + value + ']';
-            }
-        });
-
-        // Валидация формы перед отправкой
-        document.getElementById('wordForm').addEventListener('submit', function(e) {
-            const englishWord = document.getElementById('id_english_word').value.trim();
-            const russianTranslation = document.getElementById('id_russian_translation').value.trim();
-            
-            if (!englishWord || !russianTranslation) {
-                e.preventDefault();
-                alert('Пожалуйста, заполните обязательные поля: английское слово и русский перевод.');
-                return false;
-            }
-        });
-    </script>
+    <script src="https://kit.fontawesome.com/ac57da2812.js" crossorigin="anonymous"></script>
 </body>
 </html>

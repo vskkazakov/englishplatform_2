@@ -1,0 +1,113 @@
+<!-- tests/templates/tests/history.html - ИСПРАВЛЕННАЯ ВЕРСИЯ -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-10 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-history me-2"></i>{{ title }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% if total_tests > 0 %}
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="bg-light p-3 rounded text-center">
+                                        <h5 class="text-primary">📊 Общая статистика</h5>
+                                        <p class="mb-1"><strong>Всего тестов:</strong> {{ total_tests }}</p>
+                                        <p class="mb-0"><strong>Средний результат:</strong> {{ avg_success_rate }}%</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="bg-success bg-opacity-10 p-3 rounded text-center">
+                                        <h5 class="text-success">🎯 Прогресс</h5>
+                                        <p class="mb-0">Продолжайте тестироваться для улучшения результатов!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Дата</th>
+                                            <th>Категории</th>
+                                            <th>Слов</th>
+                                            <th>Правильно</th>
+                                            <th>Результат</th>
+                                            <th>Время</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for session in test_sessions %}
+                                        <tr>
+                                            <td>{{ session.start_time|date:"d.m.Y H:i" }}</td>
+                                            <td>
+                                                <small class="text-muted">{{ session.get_categories_display }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ session.total_words }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="text-success">{{ session.correct_answers }}</span> / 
+                                                <span class="text-danger">{{ session.incorrect_answers }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="progress" style="height: 20px; width: 80px;">
+                                                    <div class="progress-bar 
+                                                        {% if session.get_success_rate >= 80 %}bg-success
+                                                        {% elif session.get_success_rate >= 60 %}bg-info
+                                                        {% elif session.get_success_rate >= 40 %}bg-warning  
+                                                        {% else %}bg-danger{% endif %}" 
+                                                        style="width: {{ session.get_success_rate }}%">
+                                                        {{ session.get_success_rate }}%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">{{ session.get_duration_minutes }} мин</small>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-clipboard-check text-muted" style="font-size: 4rem;"></i>
+                                <h4 class="text-muted mt-3">У вас пока нет пройденных тестов</h4>
+                                <p class="text-muted">Пройдите первый тест, чтобы начать отслеживать прогресс</p>
+                                <a href="{% url 'tests:categories' %}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-play me-2"></i>Пройти первый тест
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a href="/dictionary/" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i>К словарю
+                            </a>
+                            <a href="{% url 'tests:categories' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Новый тест
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

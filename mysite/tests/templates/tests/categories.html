@@ -1,0 +1,125 @@
+<!-- tests/templates/tests/categories.html - ИСПРАВЛЕННАЯ ВЕРСИЯ -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-clipboard-check me-2"></i>{{ title }}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        {% if total_words == 0 %}
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                У вас пока нет слов в словаре. <a href="/dictionary/add/">Добавьте слова</a> для начала тестирования.
+                            </div>
+                        {% else %}
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="bg-light p-3 rounded">
+                                        <h5 class="text-primary">📊 Ваша статистика</h5>
+                                        <p class="mb-1"><strong>Всего слов:</strong> {{ total_words }}</p>
+                                        <p class="mb-0"><strong>Категорий:</strong> {{ categories_count }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="bg-info bg-opacity-10 p-3 rounded">
+                                        <h5 class="text-info">💡 Как это работает</h5>
+                                        <p class="mb-0 small">Выберите категории и настройки для персонального теста. Система покажет слова в виде карточек.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                
+                                <!-- Выбор категорий -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">{{ form.categories.label }}</label>
+                                    <div class="border rounded p-3 bg-light">
+                                        {% for checkbox in form.categories %}
+                                            <div class="form-check">
+                                                {{ checkbox.tag }}
+                                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                    {{ checkbox.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if form.categories.errors %}
+                                        <div class="text-danger small mt-1">{{ form.categories.errors.0 }}</div>
+                                    {% endif %}
+                                    <div class="form-text">{{ form.categories.help_text }}</div>
+                                </div>
+
+                                <!-- Настройки теста -->
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">{{ form.words_count.label }}</label>
+                                        {{ form.words_count }}
+                                        {% if form.words_count.errors %}
+                                            <div class="text-danger small">{{ form.words_count.errors.0 }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">{{ form.word_selection.label }}</label>
+                                        {{ form.word_selection }}
+                                    </div>
+                                </div>
+
+                                <!-- Режим тестирования -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">{{ form.test_mode.label }}</label>
+                                    <div class="border rounded p-3 bg-light">
+                                        {% for radio in form.test_mode %}
+                                            <div class="form-check">
+                                                {{ radio.tag }}
+                                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                                    {{ radio.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Дополнительные опции -->
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        {{ form.include_learned }}
+                                        <label class="form-check-label" for="{{ form.include_learned.id_for_label }}">
+                                            {{ form.include_learned.label }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Кнопки -->
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a href="{% url 'tests:index' %}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left me-1"></i>Назад
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-play me-1"></i>Начать тест
+                                    </button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

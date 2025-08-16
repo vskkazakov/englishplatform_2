@@ -63,37 +63,40 @@
         </div>
 
         <!-- Быстрые действия -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-bolt text-warning"></i> Быстрые действия</h5>
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <a href="{% url 'dictionary:add_word' %}" class="btn btn-success w-100">
-                                    <i class="fas fa-plus"></i> Добавить новое слово
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{% url 'dictionary:view_words' %}" class="btn btn-primary w-100">
-                                    <i class="fas fa-list"></i> Посмотреть все слова
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="/tests" class="btn btn-warning w-100">
-                                    <i class="fas fa-graduation-cap"></i> Учить новые слова
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{% url 'dictionary:bulk_import' %}" class="btn btn-info w-100">
-                                    <i class="fas fa-upload"></i> Импорт слов
-                                </a>
-                            </div>
-                        </div>
+        <div class="card my-4">
+            <div class="card-body">
+                <h5 class="card-title text-center">
+                    <i class="fas fa-bolt text-warning"></i> Быстрые действия
+                </h5>
+                <div class="row justify-content-center g-3 text-center">
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{% url 'dictionary:view_words' %}" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-list"></i><br>
+                            <small>Посмотреть все слова</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="/tests" class="btn btn-warning w-100 mb-2">
+                            <i class="fas fa-graduation-cap"></i><br>
+                            <small>Учить новые слова</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{% url 'dictionary:select_category' %}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-plus-circle"></i><br>
+                            <small>Добавить в категорию</small>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <a href="{% url 'dictionary:create_category' %}" class="btn btn-info w-100 mb-2">
+                            <i class="fas fa-folder-plus"></i><br>
+                            <small>Создать категорию</small>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Статистика -->
         <div class="row mb-4">
