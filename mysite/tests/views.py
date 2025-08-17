@@ -167,15 +167,20 @@ def question(request):
         form = TestAnswerForm(request.POST, word=current_word, test_mode=current_mode)
         if form.is_valid():
             is_correct = form.is_correct()
-            user_answer = form.cleaned_data['answer']
+            user_answer = form.cleaned_data['answer']  # Определяем переменную
             
-            # Сохраняем ответ
-            TestAnswer.objects.create(
-                test_session=test_session,
-                word=current_word,
-                user_answer=user_answer,
-                is_correct=is_correct
-            )
+            # Обновляем статистику слова
+            current_word.times_practiced += 1
+            current_word.last_practiced = timezone.now()
+            
+            if is_correct:
+                if current_word.times_practiced >= 3:
+                    current_word.is_learned = True
+            else:
+                current_word.times_practiced = 0
+                current_word.is_learned = False
+            
+            current_word.save()
             
             # Обновляем статистику сессии
             if is_correct:
@@ -187,24 +192,24 @@ def question(request):
                 messages.error(request, f'Неправильно. Правильный ответ: {correct_answer}')
             
             test_session.save()
-            
-            # Переходим к следующему слову
-            request.session['current_word_index'] = current_index + 1
-            
-            # Показываем результат на несколько секунд
-            context = {
-                'show_result': True,
-                'is_correct': is_correct,
-                'current_word': current_word,
-                'user_answer': user_answer,
-                'correct_answer': form.get_correct_answer(),
-                'current_index': current_index + 1,
-                'total_words': len(test_words_data),
-                'test_mode': current_mode,
-                'progress_percentage': int(((current_index + 1) / len(test_words_data)) * 100)
-            }
-            
-            return render(request, 'tests/question.html', context)  # ← ИСПРАВЛЕНО
+        
+        # Переходим к следующему слову
+        request.session['current_word_index'] = current_index + 1
+        
+        # Формируем контекст для показа результата
+        context = {
+            'show_result': True,
+            'is_correct': is_correct,
+            'current_word': current_word,
+            'user_answer': user_answer,  # Теперь переменная определена
+            'correct_answer': form.get_correct_answer(),
+            'current_index': current_index + 1,
+            'total_words': len(test_words_data),
+            'test_mode': current_mode,
+            'progress_percentage': int(((current_index + 1) / len(test_words_data)) * 100)
+        }
+        
+        return render(request, 'tests/question.html', context)
     else:
         form = TestAnswerForm(word=current_word, test_mode=current_mode)
     
@@ -231,7 +236,7 @@ def question(request):
         'show_result': False
     }
     
-    return render(request, 'tests/question.html', context)  # ← ИСПРАВЛЕНО
+    return render(request, 'tests/question.html', context)
 
 
 @login_required
@@ -241,17 +246,21 @@ def results(request):
     
     if not test_session_id:
         messages.error(request, 'Сессия тестирования не найдена.')
-        return redirect('tests:categories')  # ← ИСПРАВЛЕНО
+        return redirect('tests:categories')
     
     try:
         test_session = TestSession.objects.get(id=test_session_id, user=request.user)
     except TestSession.DoesNotExist:
         messages.error(request, 'Сессия тестирования не найдена.')
-        return redirect('tests:categories')  # ← ИСПРАВЛЕНО
-    
+        return redirect('tests:categories')
     # Завершаем тест
     test_session.end_time = timezone.now()
     test_session.is_completed = True
+
+    if test_session.end_time and test_session.start_time:
+        duration = test_session.end_time - test_session.start_time
+        test_session.duration = duration.total_seconds()
+    
     test_session.save()
     
     # Получаем детализированные результаты
@@ -285,6 +294,7 @@ def results(request):
         'category_stats': category_stats,
         'success_rate': test_session.get_success_rate(),
         'duration': test_session.get_duration_minutes(),
+        'duration': test_session.get_duration_minutes()
     }
     
     return render(request, 'tests/results.html', context)  # ← ИСПРАВЛЕНО

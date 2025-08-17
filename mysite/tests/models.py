@@ -51,6 +51,18 @@ class TestSession(models.Model):
         default=False,
         verbose_name="Тест завершен"
     )
+    
+    duration = models.DurationField(
+        null=True,
+        blank=True,
+        verbose_name="Длительность выполнения"
+    )
+
+    def get_duration_minutes(self):
+        """Получить продолжительность теста в минутах"""
+        if self.duration:
+            return int(self.duration.total_seconds() // 60)
+        return 0
 
     class Meta:
         verbose_name = "Сессия тестирования"
@@ -59,13 +71,6 @@ class TestSession(models.Model):
 
     def __str__(self):
         return f"Тест {self.user.username} - {self.start_time.strftime('%d.%m.%Y %H:%M')}"
-
-    def get_duration_minutes(self):
-        """Получить продолжительность теста в минутах"""
-        if self.end_time:
-            duration = self.end_time - self.start_time
-            return int(duration.total_seconds() / 60)
-        return 0
 
     def get_success_rate(self):
         """Получить процент успешности"""
@@ -77,6 +82,14 @@ class TestSession(models.Model):
         """Получить строку с категориями"""
         return ", ".join(self.categories) if self.categories else "Нет категорий"
 
+    duration = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Длительность выполнения (сек)"
+    )
+
+    def get_duration_minutes(self):
+        """Получить продолжительность теста в минутах"""
+        return round(self.duration / 60, 1) if self.duration else 0
 
 class TestAnswer(models.Model):
     """

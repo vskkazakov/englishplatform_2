@@ -7,7 +7,19 @@ class Word(models.Model):
     """
     Модель для хранения слов пользователей в словаре
     """
-
+    is_learned = models.BooleanField(
+        default=False,
+        verbose_name="Выучено"
+    )
+    times_practiced = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Количество повторений"
+    )
+    last_practiced = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Последняя практика"
+    )
     # Связь с пользователем
     user = models.ForeignKey(
         User,

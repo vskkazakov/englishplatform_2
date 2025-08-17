@@ -26,4 +26,5 @@ urlpatterns = [
     path('games', include('games.urls')),
     path('authen', include('authen.urls')),
     path('students', include('students.urls')),
+    path('act_static', include('act_static.urls'))
 ]

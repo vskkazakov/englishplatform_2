@@ -1,4 +1,3 @@
-# dictionary/views.py - ОБНОВЛЕННАЯ ВЕРСИЯ
 # views.py - Представления для приложения словаря
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,18 +5,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.core.paginator import Paginator
-from django.db.models import Q, Count, Avg, Sum, Case, When, F, FloatField
-from django.db.models.functions import Cast
+from django.db.models import Q, Count, Avg
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 import json
 import random
-from datetime import datetime, timedelta
 
 from .models import Word, StudySession, WordStatistics
 from .forms import (
     WordForm, WordSearchForm, StudyConfigForm,
-    BulkWordImportForm, WordQuizForm, QuickWordForm,
+    BulkWordImportForm, WordQuizForm, QuickWordForm, 
     CategorySelectForm, NewCategoryForm
 )
 
@@ -66,174 +63,19 @@ def index(request):
 
 
 @login_required
-def statistics(request):
-    """Статистика изучения слов и тестов"""
-    # Основная статистика пользователя
-    stats, created = WordStatistics.objects.get_or_create(user=request.user)
-    if created:
-        stats.update_words_count()
-
-    # === ОБЩАЯ СТАТИСТИКА ===
-    total_words = request.user.words.count()
-    learned_words = request.user.words.filter(is_learned=True).count()
-    words_need_practice = request.user.words.filter(
-        Q(last_practiced__isnull=True) |
-        Q(last_practiced__lt=timezone.now() - timedelta(days=7))
-    ).count()
-
-    # Прогресс изучения
-    progress_percentage = 0
-    if total_words > 0:
-        progress_percentage = int((learned_words / total_words) * 100)
-
-    # === СТАТИСТИКА ПО КАТЕГОРИЯМ ===
-    category_stats = list(request.user.words.values('category').annotate(
-        total=Count('id'),
-        learned=Count('id', filter=Q(is_learned=True))
-    ).order_by('-total'))
-
-    # Добавляем процент изученности для каждой категории
-    for category in category_stats:
-        if category['total'] > 0:
-            category['progress'] = int((category['learned'] / category['total']) * 100)
-        else:
-            category['progress'] = 0
-
-    # === СТАТИСТИКА ПО УРОВНЯМ СЛОЖНОСТИ ===
-    difficulty_stats = list(request.user.words.values('difficulty_level').annotate(
-        total=Count('id'),
-        learned=Count('id', filter=Q(is_learned=True))
-    ).order_by('-total'))
-
-    # Добавляем процент изученности для каждого уровня
-    for difficulty in difficulty_stats:
-        if difficulty['total'] > 0:
-            difficulty['progress'] = int((difficulty['learned'] / difficulty['total']) * 100)
-        else:
-            difficulty['progress'] = 0
-
-    # === АКТИВНОСТЬ ПО ДНЯМ ===
-    daily_learned_words = []
-    for i in range(7):  # Последние 7 дней
-        date = timezone.now().date() - timedelta(days=i)
-        date_start = timezone.make_aware(datetime.combine(date, datetime.min.time()))
-        date_end = timezone.make_aware(datetime.combine(date, datetime.max.time()))
-
-        # Считаем слова которые были изучены в этот день
-        words_practiced = request.user.words.filter(
-            last_practiced__range=(date_start, date_end)
-        )
-
-        words_learned_today = words_practiced.filter(is_learned=True)
-
-        if words_practiced.count() > 0:
-            daily_learned_words.append({
-                'date': date,
-                'date_formatted': date.strftime('%d.%m'),
-                'day_name': date.strftime('%A'),
-                'words_practiced': words_practiced.count(),
-                'words_learned': words_learned_today.count(),
-                'words_list': list(words_learned_today.values(
-                    'english_word', 'russian_translation', 'category'
-                )[:10])
-            })
-
-    # === СЕССИИ ИЗУЧЕНИЯ ===
-    recent_study_sessions = list(request.user.study_sessions.order_by('-start_time')[:10])
-
-    # Добавляем процент успешности для каждой сессии
-    for session in recent_study_sessions:
-        session.success_rate = session.get_success_rate()
-        session.duration = session.get_duration_minutes()
-
-    # === СТАТИСТИКА ТЕСТОВ (если приложение tests доступно) ===
-    try:
-        from tests.models import TestSession as TestSessionModel
-        has_tests_app = True
-
-        # Все тесты пользователя
-        user_tests = list(TestSessionModel.objects.filter(user=request.user).order_by('-start_time')[:15])
-
-        # Добавляем дополнительную информацию к тестам
-        for test in user_tests:
-            test.success_rate = test.get_success_rate() if hasattr(test, 'get_success_rate') else (
-                int((test.correct_answers / test.total_words) * 100) if test.total_words > 0 else 0
-            )
-            test.duration = test.get_duration_minutes() if hasattr(test, 'get_duration_minutes') else 0
-
-        # Средние показатели тестов
-        if user_tests:
-            avg_success_rate = sum([test.success_rate for test in user_tests]) / len(user_tests)
-            total_test_questions = sum([test.total_words for test in user_tests])
-            total_correct_answers = sum([test.correct_answers for test in user_tests])
-        else:
-            avg_success_rate = 0
-            total_test_questions = 0
-            total_correct_answers = 0
-
-        test_stats = {
-            'total_tests': len(user_tests),
-            'avg_success_rate': avg_success_rate,
-            'total_questions': total_test_questions,
-            'total_correct': total_correct_answers,
-        }
-
-    except ImportError:
-        has_tests_app = False
-        user_tests = []
-        test_stats = {
-            'total_tests': 0,
-            'avg_success_rate': 0,
-            'total_questions': 0,
-            'total_correct': 0,
-        }
-
-    # === ДОСТИЖЕНИЯ ===
-    achievements = {
-        'total_words': total_words,
-        'learned_words': learned_words,
-        'categories_count': len(category_stats),
-        'current_streak': stats.current_streak,
-        'best_streak': stats.best_streak,
-        'practice_time': stats.total_practice_time,
-    }
-
-    # === ПОСЛЕДНИЕ ИЗУЧЕННЫЕ СЛОВА ===
-    recent_learned_words = list(request.user.words.filter(is_learned=True).order_by('-last_practiced')[:10])
-
-    context = {
-        'stats': stats,
-        'total_words': total_words,
-        'learned_words': learned_words,
-        'words_need_practice': words_need_practice,
-        'progress_percentage': progress_percentage,
-        'category_stats': category_stats,
-        'difficulty_stats': difficulty_stats,
-        'daily_learned_words': daily_learned_words,
-        'recent_study_sessions': recent_study_sessions,
-        'recent_learned_words': recent_learned_words,
-        'achievements': achievements,
-        'has_tests_app': has_tests_app,
-        'user_tests': user_tests,
-        'test_stats': test_stats,
-    }
-
-    return render(request, 'dictionary/statistics.html', context)
-
-
-# === ОСТАЛЬНЫЕ ФУНКЦИИ (не изменяются) ===
-
-@login_required
 def add_word(request):
     """Добавление нового слова"""
     if request.method == 'POST':
         form = WordForm(request.POST, user=request.user)
         if form.is_valid():
             word = form.save()
+
             # Обновляем статистику
             stats, created = WordStatistics.objects.get_or_create(user=request.user)
             stats.update_words_count()
+
             messages.success(request, f'Слово "{word.english_word}" успешно добавлено в словарь!')
+
             # Если запрос AJAX, возвращаем JSON
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
@@ -241,6 +83,7 @@ def add_word(request):
                     'message': f'Слово "{word.english_word}" добавлено!',
                     'word_id': word.id
                 })
+
             return redirect('dictionary:view_words')
         else:
             # Если есть ошибки формы
