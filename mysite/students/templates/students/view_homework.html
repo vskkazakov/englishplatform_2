@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Домашнее задание - {{ homework.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ homework.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Учитель:</strong> {{ homework.teacher.get_full_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Ученик:</strong> {{ homework.student.get_full_name }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Описание:</strong>
+                        <p class="mt-2">{{ homework.description|linebreaks }}</p>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Создано:</strong> {{ homework.created_at|date:"d.m.Y H:i" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Срок выполнения:</strong> {{ homework.due_date|date:"d.m.Y H:i" }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Статус:</strong>
+                        {% if homework.is_completed %}
+                            <span class="badge bg-success">Выполнено</span>
+                            {% if homework.completed_at %}
+                                <small class="text-muted">({{ homework.completed_at|date:"d.m.Y H:i" }})</small>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge bg-warning">В процессе</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if homework.teacher_feedback %}
+                    <div class="mb-3">
+                        <strong>Отзыв учителя:</strong>
+                        <p class="mt-2">{{ homework.teacher_feedback|linebreaks }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'students:my_students' %}" class="btn btn-secondary">Назад к моим ученикам</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

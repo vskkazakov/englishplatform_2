@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать домашнее задание - Entertaining English</title>
+    <link rel="stylesheet" href="{% static 'students/styles.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Entertaining English</h1>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <nav class="nav">
+                    <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                    <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                    <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                    <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                    <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="content-section">
+                <div class="section-header">
+                    <h2>Создать домашнее задание</h2>
+                    <p>Создайте задание для ученика: {{ student.user.get_full_name|default:student.user.username }}</p>
+                </div>
+
+                <div class="form-container">
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="form-error">{{ form.title.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="form-error">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.due_date.id_for_label }}" class="form-label">{{ form.due_date.label }}</label>
+                            {{ form.due_date }}
+                            {% if form.due_date.errors %}
+                                <div class="form-error">{{ form.due_date.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <span class="btn-icon">📝</span>
+                                Создать задание
+                            </button>
+                            <a href="{% url 'students:my_students' %}" class="btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Ученики</h4>
+                    <p>Управление классами и учениками</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

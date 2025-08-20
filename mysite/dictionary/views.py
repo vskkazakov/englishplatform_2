@@ -753,8 +753,15 @@ def word_detail(request, word_id):
 def select_category(request):
     """Выбор существующей категории для добавления слов"""
     # Проверяем есть ли у пользователя категории
-    user_categories = request.user.words.values_list('category', flat=True).distinct()
-    user_categories = [cat for cat in user_categories if cat]
+    # Используем distinct() и фильтруем пустые категории
+    user_categories = request.user.words.filter(
+        category__isnull=False
+    ).exclude(
+        category__exact=''
+    ).values_list('category', flat=True).distinct().order_by('category')
+    
+    # Преобразуем QuerySet в список уникальных категорий
+    user_categories = list(user_categories)
 
     if not user_categories:
         messages.info(request, 'У вас пока нет категорий. Создайте первую категорию!')

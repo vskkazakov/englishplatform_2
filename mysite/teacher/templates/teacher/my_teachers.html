@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Мои учителя</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'teacher/styles.css' %}?v=1.0">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
+            </div>
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Привет, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="btn-login">Выйти</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% csrf_token %}
+            <!-- Заголовок -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-accent">Мои учителя</span>
+                    </h1>
+                    <p class="hero-description">
+                        Управляйте своими учителями и домашними заданиями
+                    </p>
+                </div>
+            </section>
+
+            <!-- Входящие приглашения от учителей -->
+            {% if incoming_requests %}
+            <section class="requests-section">
+                <div class="section-header">
+                    <h2>Входящие приглашения от учителей</h2>
+                </div>
+                <div class="requests-grid">
+                    {% for request in incoming_requests %}
+                    <div class="request-card">
+                        <div class="request-header">
+                            <div class="teacher-avatar">
+                                <span class="avatar-placeholder">{{ request.teacher.first_name|first|upper }}</span>
+                            </div>
+                            <div class="request-info">
+                                <h3 class="teacher-name">{{ request.teacher.get_full_name|default:request.teacher.username }}</h3>
+                                <span class="request-date">Отправлено: {{ request.created_at|date:"d.m.Y H:i" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="request-message">
+                            <p>{{ request.message }}</p>
+                        </div>
+
+                        <div class="request-actions">
+                            <button class="btn-success" onclick="respondToRequest({{ request.id }}, 'accepted')">
+                                <span class="btn-icon">✅</span>
+                                Принять
+                            </button>
+                            <button class="btn-danger" onclick="respondToRequest({{ request.id }}, 'rejected')">
+                                <span class="btn-icon">❌</span>
+                                Отклонить
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Мои учителя -->
+            {% if relationships %}
+            <section class="teachers-section">
+                <div class="section-header">
+                    <h2>Мои учителя</h2>
+                </div>
+                <div class="teachers-grid">
+                    {% for relationship in relationships %}
+                    <div class="teacher-card">
+                        <div class="teacher-header">
+                            <div class="teacher-avatar">
+                                <span class="avatar-placeholder">{{ relationship.teacher.first_name|first|upper }}</span>
+                            </div>
+                            <div class="teacher-info">
+                                <h3 class="teacher-name">{{ relationship.teacher.get_full_name|default:relationship.teacher.username }}</h3>
+                                <span class="teacher-email">📧 {{ relationship.teacher.email }}</span>
+                                <span class="relationship-date">С: {{ relationship.started_at|date:"d.m.Y" }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="teacher-actions">
+                            <button class="btn-primary" onclick="viewHomework({{ relationship.teacher.id }})">
+                                <span class="btn-icon">📚</span>
+                                Задания
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            <!-- Домашние задания -->
+            {% if homework_list %}
+            <section class="homework-section">
+                <div class="section-header">
+                    <h2>Домашние задания</h2>
+                </div>
+                <div class="homework-grid">
+                    {% for homework in homework_list %}
+                    <div class="homework-card">
+                        <div class="homework-header">
+                            <h3 class="homework-title">{{ homework.title }}</h3>
+                            <span class="homework-status {% if homework.is_completed %}completed{% else %}pending{% endif %}">
+                                {% if homework.is_completed %}
+                                    ✅ Выполнено
+                                {% else %}
+                                    ⏳ В процессе
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="homework-details">
+                            <p class="homework-description">{{ homework.description|truncatechars:100 }}</p>
+                            <div class="homework-meta">
+                                <span class="teacher-name">От: {{ homework.teacher.get_full_name|default:homework.teacher.username }}</span>
+                                <span class="due-date">Срок: {{ homework.due_date|date:"d.m.Y H:i" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="homework-actions">
+                            <a href="{% url 'teacher:view_homework' homework_id=homework.id %}" class="btn-primary">
+                                <span class="btn-icon">👁️</span>
+                                Просмотр
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+            
+            {% if not relationships and not incoming_requests %}
+            <section class="empty-state">
+                <div class="empty-content">
+                    <div class="empty-icon">👨‍🏫</div>
+                    <h3>У вас пока нет учителей</h3>
+                    <p>Отправьте запросы учителям или примите их приглашения, чтобы начать обучение</p>
+                    <a href="{% url 'teacher:index' %}" class="btn-primary">Найти учителей</a>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Сообщения -->
+            {% if messages %}
+            <section class="messages-section">
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            <div class="message-icon">
+                                {% if message.tags == 'success' %}
+                                    ✅
+                                {% elif message.tags == 'error' %}
+                                    ❌
+                                {% elif message.tags == 'warning' %}
+                                    ⚠️
+                                {% else %}
+                                    ℹ️
+                                {% endif %}
+                            </div>
+                            <div class="message-content">
+                                <div class="message-title">
+                                    {% if message.tags == 'success' %}
+                                        Успех!
+                                    {% elif message.tags == 'error' %}
+                                        Ошибка!
+                                    {% elif message.tags == 'warning' %}
+                                        Внимание!
+                                    {% else %}
+                                        Информация:
+                                    {% endif %}
+                                </div>
+                                <div class="message-text">{{ message }}</div>
+                            </div>
+                            <button class="message-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Мои учителя</h4>
+                    <p>Управление обучением</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function respondToRequest(requestId, status) {
+            if (confirm('Вы уверены, что хотите ' + (status === 'accepted' ? 'принять' : 'отклонить') + ' это приглашение?')) {
+                const formData = new FormData();
+                formData.append('status', status);
+                formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+                
+                fetch(`/teacher/respond-request/${requestId}/`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Произошла ошибка');
+                });
+            }
+        }
+
+        function viewHomework(teacherId) {
+            // Показываем список домашних заданий от конкретного учителя
+            const homeworkItems = document.querySelectorAll('.homework-card');
+            homeworkItems.forEach(item => {
+                const teacherName = item.querySelector('.teacher-name').textContent;
+                if (teacherName.includes('От:')) {
+                    const teacherNameMatch = teacherName.match(/От: .+? /);
+                    if (teacherNameMatch) {
+                        // Показываем только задания от выбранного учителя
+                        item.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Показываем секцию с домашними заданиями
+            const homeworkSection = document.querySelector('.homework-section');
+            if (homeworkSection) {
+                homeworkSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Автоматическое скрытие уведомлений через 5 секунд
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

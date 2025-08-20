@@ -1,75 +1,1059 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ученики</title>
-<style>
-  body {
-    font-family: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-      BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(135deg, #0f0f23 0%, #1a0b3d 25%, #2d1b69 50%, #1e3a8a 75%, #0066cc 100%);
-    color: white;
-    margin: 0;
-    padding: 32px;
-    min-height: 100vh;
-  }
-  h1 {
-    font-weight: 600;
-    font-size: 2rem;
-    margin-bottom: 24px;
-    text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
-  }
-  .students-container {
-    max-width: 600px;
-    background: rgba(20, 20, 40, 0.7);
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(138, 43, 226, 0.5);
-  }
-  ul.students-list {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 24px;
-  }
-  ul.students-list li {
-    background: rgba(138, 43, 226, 0.2);
-    margin-bottom: 12px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    box-shadow: 0 0 10px rgba(30, 144, 255, 0.3);
-  }
-  .add-student-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 20px;
-    font-size: 1.25rem;
-    font-weight: 600;
-    background: linear-gradient(45deg, #6A0DAD, #1E90FF);
-    border: none;
-    border-radius: 12px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.7);
-    user-select: none;
-    transition: background 0.3s ease;
-  }
-  .add-student-btn:hover {
-    background: linear-gradient(45deg, #7c3aed, #3b99ff);
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Ученики</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'students/styles.css' %}?v=1.0">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #22c55e;
+            --primary-hover: #16a34a;
+            --secondary-color: #a855f7;
+            --secondary-hover: #9333ea;
+            --accent-color: #6b7280;
+            --accent-hover: #4b5563;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            
+            --border-color: #e5e7eb;
+            --border-hover: #d1d5db;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            --transition: all 0.2s ease-in-out;
+            --transition-slow: all 0.3s ease-in-out;
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+        }
+
+        .logo-accent {
+            color: var(--primary-color);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        .user-greeting {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .title-accent {
+            color: white;
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .large-modal {
+            max-width: 800px;
+            max-height: 90vh;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-group {
+            flex: 1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-card {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            margin: 0 0 0.25rem 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .student-email {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .student-actions {
+            text-align: center;
+        }
+
+        .loading, .error, .no-students {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .loading {
+            color: #667eea;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .add-students-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .add-students-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Hero Actions */
+        .hero-actions {
+            margin-top: 2rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Students Section */
+        .students-section {
+            margin: 3rem 0;
+        }
+
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .student-email, .relationship-date, .student-notes {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Homework Section */
+        .homework-section {
+            margin: 3rem 0;
+        }
+
+        .homework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .homework-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .homework-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .homework-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .homework-title {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .homework-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .homework-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .homework-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .homework-details {
+            margin: 1rem 0;
+        }
+
+        .homework-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .homework-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .homework-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .homework-meta span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .homework-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-content h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .empty-content p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .empty-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .empty-hint {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary, .btn-secondary, .btn-success {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Ученики</h1>
-  <div class="students-container">
-    <ul class="students-list">
-      <li>Иван Иванов</li>
-      <li>Мария Петрова</li>
-      <li>Алексей Сидоров</li>
-    </ul>
-    <button class="add-student-btn" title="Добавить нового ученика">＋</button>
-  </div>
+    {% load student_filters %}
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
+            </div>
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Привет, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="btn-login">Выйти</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-accent">Управление учениками</span>
+                    </h1>
+                    <p class="hero-description">
+                        Приглашайте новых учеников, управляйте текущими и назначайте домашние задания
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn-primary add-students-btn" onclick="showAddStudentsModal()">
+                            <span class="btn-icon">➕</span>
+                            Добавить учеников
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Текущие ученики -->
+            {% if current_students %}
+            <section class="students-section">
+                <div class="section-header">
+                    <h2>👨‍🎓 Текущие ученики</h2>
+                    <p class="section-description">Ученики, с которыми у вас установлена связь для обучения</p>
+                </div>
+                <div class="students-grid">
+                    {% for relationship in current_students %}
+                    <div class="student-card">
+                        <div class="student-header">
+                            <div class="student-avatar">
+                                <span class="avatar-placeholder">{{ relationship.student.first_name|first|upper }}</span>
+                            </div>
+                            <div class="student-info">
+                                <h3 class="student-name">{{ relationship.student.get_full_name|default:relationship.student.username }}</h3>
+                                <span class="student-email">📧 {{ relationship.student.email }}</span>
+                                <span class="relationship-date">📅 С: {{ relationship.started_at|date:"d.m.Y" }}</span>
+                                {% if relationship.notes %}
+                                <span class="student-notes">📝 {{ relationship.notes|truncatechars:100 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="student-actions">
+                            <button class="btn-primary" onclick="createHomework({{ relationship.student.id }}, '{{ relationship.student.get_full_name|default:relationship.student.username }}')">
+                                <span class="btn-icon">📝</span>
+                                Создать задание
+                            </button>
+                            <a href="{% url 'students:view_homework' homework_id=0 %}?student_id={{ relationship.student.id }}" class="btn-secondary">
+                                <span class="btn-icon">📚</span>
+                                Просмотр заданий
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Домашние задания -->
+            {% if homework_list %}
+            <section class="homework-section">
+                <div class="section-header">
+                    <h2>📝 Домашние задания</h2>
+                    <p class="section-description">Задания, которые вы назначили своим ученикам</p>
+                </div>
+                <div class="homework-grid">
+                    {% for homework in homework_list %}
+                    <div class="homework-card">
+                        <div class="homework-header">
+                            <h3 class="homework-title">{{ homework.title }}</h3>
+                            <span class="homework-status {% if homework.is_completed %}completed{% else %}pending{% endif %}">
+                                {% if homework.is_completed %}
+                                    ✅ Выполнено
+                                {% else %}
+                                    ⏳ В процессе
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="homework-details">
+                            <h4>📋 Описание:</h4>
+                            <p class="homework-description">{{ homework.description|truncatechars:150 }}</p>
+                            <div class="homework-meta">
+                                <span class="student-name">👨‍🎓 Для: {{ homework.student.get_full_name|default:homework.student.username }}</span>
+                                <span class="due-date">⏰ Срок: {{ homework.due_date|date:"d.m.Y H:i" }}</span>
+                                {% if homework.is_completed %}
+                                <span class="completed-date">✅ Выполнено: {{ homework.completed_at|date:"d.m.Y H:i" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="homework-actions">
+                            <a href="{% url 'students:view_homework' homework_id=homework.id %}" class="btn-primary">
+                                <span class="btn-icon">👁️</span>
+                                Просмотр задания
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            {% if not current_students and not homework_list %}
+            <section class="empty-state">
+                <div class="empty-content">
+                    <div class="empty-icon">👨‍🎓</div>
+                    <h3>У вас пока нет учеников</h3>
+                    <p>Начните с приглашения учеников на обучение</p>
+                    <div class="empty-actions">
+                        <button class="btn-primary add-students-btn" onclick="showAddStudentsModal()">
+                            <span class="btn-icon">➕</span>
+                            Добавить учеников
+                        </button>
+                        <p class="empty-hint">💡 Совет: Ученики получат ваши приглашения и смогут принять их</p>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Сообщения -->
+            {% if messages %}
+            <section class="messages-section">
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            <div class="message-icon">
+                                {% if message.tags == 'success' %}
+                                    ✅
+                                {% elif message.tags == 'error' %}
+                                    ❌
+                                {% elif message.tags == 'warning' %}
+                                    ⚠️
+                                {% else %}
+                                    ℹ️
+                                {% endif %}
+                            </div>
+                            <div class="message-content">
+                                <div class="message-title">
+                                    {% if message.tags == 'success' %}
+                                        Успех!
+                                    {% elif message.tags == 'error' %}
+                                        Ошибка!
+                                    {% elif message.tags == 'warning' %}
+                                        Внимание!
+                                    {% else %}
+                                        Информация:
+                                    {% endif %}
+                                </div>
+                                <div class="message-text">{{ message }}</div>
+                            </div>
+                            <button class="message-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Модальное окно для добавления учеников -->
+    <div id="addStudentsModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3>➕ Добавить учеников</h3>
+                <button class="modal-close" onclick="closeAddStudentsModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Поиск учеников -->
+                <div class="search-section">
+                    <form method="get" class="search-form" id="studentSearchForm">
+                        <div class="search-row">
+                            <div class="search-group">
+                                <input type="text" name="search_query" class="form-control" 
+                                       placeholder="Поиск по имени или email..." id="studentSearchInput">
+                            </div>
+                            <div class="search-group">
+                                <button type="submit" class="btn-primary">
+                                    <span class="btn-icon">🔍</span>
+                                    Поиск
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Список учеников для добавления -->
+                <div class="students-list" id="studentsList">
+                    <!-- Здесь будет динамически загружаться список учеников -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для отправки приглашения -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Пригласить ученика на обучение</h3>
+                <button class="modal-close" onclick="closeRequestModal()">×</button>
+            </div>
+            <form id="requestForm" class="request-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="message" class="form-label">Сообщение ученику</label>
+                    <textarea id="message" name="message" rows="4" class="form-control" 
+                              placeholder="Напишите, почему вы хотите учить этого ученика..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <span class="btn-icon">📤</span>
+                        Отправить приглашение
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeRequestModal()">
+                        Отмена
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Ученики</h4>
+                    <p>Управление классами и учениками</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentStudentId = null;
+        let currentStudentName = '';
+
+        function showRequestModal(studentId, studentName) {
+            currentStudentId = studentId;
+            currentStudentName = studentName;
+            document.getElementById('requestModal').style.display = 'flex';
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+            document.getElementById('requestForm').reset();
+        }
+
+        function showAddStudentsModal() {
+            document.getElementById('addStudentsModal').style.display = 'flex';
+            loadStudentsList(); // Загружаем список учеников при открытии
+        }
+
+        function closeAddStudentsModal() {
+            document.getElementById('addStudentsModal').style.display = 'none';
+            document.getElementById('studentSearchForm').reset();
+        }
+
+        function loadStudentsList(searchQuery = '') {
+            const studentsList = document.getElementById('studentsList');
+            studentsList.innerHTML = '<div class="loading">Загрузка учеников...</div>';
+            
+            // Загружаем список учеников через AJAX
+            fetch(`/students/get-students-list/?search=${searchQuery}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayStudentsList(data.students);
+                    } else {
+                        studentsList.innerHTML = '<div class="error">Ошибка загрузки: ' + data.error + '</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    studentsList.innerHTML = '<div class="error">Произошла ошибка при загрузке</div>';
+                });
+        }
+
+        function displayStudentsList(students) {
+            const studentsList = document.getElementById('studentsList');
+            
+            if (students.length === 0) {
+                studentsList.innerHTML = '<div class="no-students">Ученики не найдены</div>';
+                return;
+            }
+            
+            let html = '<div class="students-grid">';
+            students.forEach(student => {
+                const hasRequest = student.has_request;
+                const requestStatus = student.request_status;
+                const isCurrentStudent = student.is_current_student;
+                
+                let buttonHtml = '';
+                if (isCurrentStudent) {
+                    buttonHtml = '<button class="btn-success" disabled><span class="btn-icon">✅</span>Уже ученик</button>';
+                } else if (hasRequest && requestStatus === 'pending') {
+                    buttonHtml = '<button class="btn-secondary" disabled><span class="btn-icon">⏳</span>Приглашение отправлено</button>';
+                } else if (hasRequest && (requestStatus === 'rejected' || requestStatus === 'cancelled')) {
+                    buttonHtml = `<button class="btn-primary" onclick="sendRequestToStudent(${student.id}, '${student.name}')"><span class="btn-icon">🔄</span>Отправить повторно</button>`;
+                } else {
+                    buttonHtml = `<button class="btn-primary" onclick="sendRequestToStudent(${student.id}, '${student.name}')"><span class="btn-icon">📝</span>Пригласить</button>`;
+                }
+                
+                html += `
+                    <div class="student-card">
+                        <div class="student-header">
+                            <div class="student-avatar">
+                                <span class="avatar-placeholder">${student.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div class="student-info">
+                                <h3 class="student-name">${student.name}</h3>
+                                <span class="student-email">📧 ${student.email}</span>
+                            </div>
+                        </div>
+                        <div class="student-actions">
+                            ${buttonHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            studentsList.innerHTML = html;
+        }
+
+        function sendRequestToStudent(studentId, studentName) {
+            currentStudentId = studentId;
+            currentStudentName = studentName;
+            closeAddStudentsModal();
+            showRequestModal(studentId, studentName);
+        }
+
+        function createHomework(studentId, studentName) {
+            // Перенаправляем на страницу создания домашнего задания
+            window.location.href = `/students/create-homework/${studentId}/`;
+        }
+
+        // Обработчик поиска учеников
+        document.getElementById('studentSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchQuery = document.getElementById('studentSearchInput').value;
+            loadStudentsList(searchQuery);
+        });
+
+        document.getElementById('requestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(`/students/send-request/${currentStudentId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    closeRequestModal();
+                    location.reload(); // Обновляем страницу для отображения изменений
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при отправке приглашения');
+            });
+        });
+
+        // Автоматическое скрытие уведомлений через 5 секунд
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            });
+        }, 5000);
+    </script>
 </body>
 </html>

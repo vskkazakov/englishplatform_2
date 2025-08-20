@@ -21,10 +21,11 @@ from django.conf.urls import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mainApp.urls')),
-    path('dictionary', include('dictionary.urls')),
-    path('tests', include('tests.urls')),
-    path('games', include('games.urls')),
-    path('authen', include('authen.urls')),
-    path('students', include('students.urls')),
-    path('act_static', include('act_static.urls'))
+    path('dictionary/', include('dictionary.urls')),
+    path('tests/', include('tests.urls')),
+    path('games/', include('games.urls', namespace='games')),
+    path('authen/', include('authen.urls')),
+    path('students/', include('students.urls')),
+    path('act_static/', include('act_static.urls', namespace='act_static')),
+    path('teacher/', include('teacher.urls')),
 ]

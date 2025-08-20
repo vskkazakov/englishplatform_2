@@ -3,190 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Английский Онлайн</title>
-    <link rel="stylesheet" href="{% load static %}{% static 'authen/styles.css' %}">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Авторизация</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'authen/styles.css' %}?v=2.1">
 </head>
 <body>
-    <div class="container">
-        {% if user.is_authenticated %}
-            <div class="user-info">
-                <span>Привет, {{ user.first_name }}!</span>
-                <a href="{% url 'authen:logout' %}" class="logout-btn">Выйти</a>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
             </div>
-        {% endif %}
-
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="message {{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
             </div>
-        {% endif %}
+        </div>
+    </header>
 
-        {% if stage == 'initial' %}
-            <!-- Начальный этап - выбор регистрации/входа -->
-            <div class="auth-container">
-                <div class="tab-buttons">
-                    <button class="tab-btn {% if show_registration %}active{% endif %}" onclick="showRegistration()">Регистрация</button>
-                    <button class="tab-btn {% if not show_registration %}active{% endif %}" onclick="showLogin()">Вход</button>
+    <main class="main">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <div class="user-info">
+                    <span>Привет, {{ user.first_name }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="logout-btn">Выйти</a>
                 </div>
+            {% endif %}
 
-                <div class="registration-form {% if show_registration %}active{% endif %}">
-                    <h2>Создать аккаунт</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="register" value="1">
-                        
-                        <div class="form-group">
-                            {{ registration_form.email.label_tag }}
-                            {{ registration_form.email }}
-                            {% for error in registration_form.email.errors %}
-                                <div class="error">{{ error }}</div>
-                            {% endfor %}
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            {{ message }}
                         </div>
-
-                        <button type="submit">Отправить код</button>
-                    </form>
+                    {% endfor %}
                 </div>
+            {% endif %}
 
-                <div class="login-form {% if not show_registration %}active{% endif %}">
-                    <h2>Войти в систему</h2>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="login" value="1">
-                        
-                        <div class="form-group">
-                            {{ login_form.email.label_tag }}
-                            {{ login_form.email }}
-                            {% for error in login_form.email.errors %}
-                                <div class="error">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-
-                        <button type="submit">Отправить код</button>
-                    </form>
-                </div>
-            </div>
-        
-        {% elif stage == 'verification' %}
-            <!-- Этап ввода кода подтверждения -->
-            <div class="auth-container">
-                <h2>Подтверждение Email</h2>
-                <p>Код отправлен на <strong>{{ email }}</strong></p>
-                
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="verify_code" value="1">
-                    
-                    <div class="form-group">
-                        {{ code_form.code.label_tag }}
-                        {{ code_form.code }}
-                        {% for error in code_form.code.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+            {% if stage == 'initial' %}
+                <!-- Начальный этап - выбор регистрации/входа -->
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h1>Добро пожаловать в Entertaining English</h1>
+                        <p>Выберите способ входа в систему</p>
                     </div>
 
-                    <button type="submit">Подтвердить</button>
-                    <button type="button" class="resend-btn" onclick="resendCode()">Отправить код повторно</button>
-                </form>
-            </div>
-        
-        {% elif stage == 'registration' %}
-            <!-- Этап регистрации после подтверждения email -->
-            <div class="auth-container">
-                <h2>Завершение регистрации</h2>
-                <p>Email: <strong>{{ email }}</strong></p>
-                
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="register_final" value="1">
-                    
-                    <div class="form-group">
-                        <label for="id_first_name">Имя:</label>
-                        <input 
-                            type="text" 
-                            name="first_name" 
-                            class="form-control" 
-                            placeholder="Введите ваше имя" 
-                            required
-                            id="id_first_name">
+                    <div class="tab-buttons">
+                        <button class="tab-btn {% if show_registration %}active{% endif %}" onclick="showRegistration()">
+                            <span class="tab-icon">📝</span>
+                            <span class="tab-text">Регистрация</span>
+                        </button>
+                        <button class="tab-btn {% if not show_registration %}active{% endif %}" onclick="showLogin()">
+                            <span class="tab-icon">🔑</span>
+                            <span class="tab-text">Вход</span>
+                        </button>
                     </div>
 
-                    <div class="form-group">
-                        <label for="id_password1">Пароль:</label>
-                        <input 
-                            type="password" 
-                            name="password1" 
-                            class="form-control" 
-                            placeholder="Введите пароль" 
-                            required
-                            id="id_password1">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_password2">Подтверждение пароля:</label>
-                        <input 
-                            type="password" 
-                            name="password2" 
-                            class="form-control" 
-                            placeholder="Подтвердите пароль" 
-                            required
-                            id="id_password2">
-                    </div>
-
-                    <div class="form-group role-selection">
-                        <label>Роль:</label>
-                        <div>
-                            <input type="radio" name="role" value="student" id="id_role_0" checked>
-                            <label for="id_role_0" style="display:inline; margin-right:15px;">Ученик</label>
+                    <div class="registration-form {% if show_registration %}active{% endif %}">
+                        <h2>Создать аккаунт</h2>
+                        <p class="form-description">Введите ваш email для начала регистрации</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="register" value="1">
                             
-                            <input type="radio" name="role" value="teacher" id="id_role_1">
-                            <label for="id_role_1" style="display:inline;">Учитель</label>
+                            <div class="form-group">
+                                {{ registration_form.email.label_tag }}
+                                <div class="input-wrapper">
+                                    {{ registration_form.email }}
+                                    <span class="input-icon">📧</span>
+                                </div>
+                                {% for error in registration_form.email.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn-primary">
+                                <span class="btn-icon">🚀</span>
+                                Отправить код
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="login-form {% if not show_registration %}active{% endif %}">
+                        <h2>Войти в систему</h2>
+                        <p class="form-description">Введите ваш email для входа</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="login" value="1">
+                            
+                            <div class="form-group">
+                                {{ login_form.email.label_tag }}
+                                <div class="input-wrapper">
+                                    {{ login_form.email }}
+                                    <span class="input-icon">📧</span>
+                                </div>
+                                {% for error in login_form.email.errors %}
+                                    <div class="error">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn-primary">
+                                <span class="btn-icon">🔐</span>
+                                Отправить код
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            
+            {% elif stage == 'verification' %}
+                <!-- Этап ввода кода подтверждения -->
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h1>Подтверждение Email</h1>
+                        <p>Код отправлен на <strong>{{ email }}</strong></p>
+                    </div>
+                    
+                    <form method="POST" class="verification-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="verify_code" value="1">
+                        
+                        <div class="form-group">
+                            <label for="id_code">Код подтверждения:</label>
+                            <div class="input-wrapper">
+                                {{ code_form.code }}
+                                <span class="input-icon">🔢</span>
+                            </div>
+                            {% for error in code_form.code.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
                         </div>
+
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-icon">✅</span>
+                            Подтвердить
+                        </button>
+                        
+                        <button type="button" class="btn-secondary" onclick="resendCode()">
+                            <span class="btn-icon">🔄</span>
+                            Отправить код повторно
+                        </button>
+                    </form>
+                </div>
+            
+            {% elif stage == 'registration' %}
+                <!-- Этап регистрации после подтверждения email -->
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h1>Завершение регистрации</h1>
+                        <p>Email: <strong>{{ email }}</strong></p>
                     </div>
+                    
+                    <form method="POST" class="registration-final-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="register_final" value="1">
+                        
+                        <div class="form-group">
+                            <label for="id_first_name">Имя:</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    name="first_name" 
+                                    class="form-control" 
+                                    placeholder="Введите ваше имя" 
+                                    required
+                                    id="id_first_name">
+                                <span class="input-icon">👤</span>
+                            </div>
+                        </div>
 
-                    <button type="submit">Зарегистрироваться</button>
-                </form>
-            </div>
-        
-        {% elif stage == 'login' %}
-            <!-- Этап входа после подтверждения email -->
-            <div class="auth-container">
-                <h2>Вход в систему</h2>
-                <p>Email: <strong>{{ email }}</strong></p>
-                
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="login_final" value="1">
-                    
-                    <!-- Скрытое поле для email -->
-                    <input type="hidden" name="email" value="{{ email }}">
-                    
-                    <div class="form-group">
-                        <label for="id_password">Пароль:</label>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            class="form-control" 
-                            placeholder="Введите пароль" 
-                            required
-                            id="id_password">
-                        {% for error in login_form.password.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor %}
+                        <div class="form-group">
+                            <label for="id_password1">Пароль:</label>
+                            <div class="input-wrapper password-wrapper">
+                                <input 
+                                    type="password" 
+                                    name="password1" 
+                                    class="form-control" 
+                                    placeholder="Введите пароль" 
+                                    required
+                                    id="id_password1">
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_password1')">
+                                    <span class="eye-icon">👁️</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_password2">Подтверждение пароля:</label>
+                            <div class="input-wrapper password-wrapper">
+                                <input 
+                                    type="password" 
+                                    name="password2" 
+                                    class="form-control" 
+                                    placeholder="Подтвердите пароль" 
+                                    required
+                                    id="id_password2">
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_password2')">
+                                    <span class="eye-icon">👁️</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group role-selection">
+                            <label>Роль:</label>
+                            <div class="role-options">
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="student" id="id_role_0" checked>
+                                    <span class="role-icon">🎓</span>
+                                    <span class="role-text">Ученик</span>
+                                </label>
+                                
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="teacher" id="id_role_1">
+                                    <span class="role-icon">👨‍🏫</span>
+                                    <span class="role-text">Учитель</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-icon">🎉</span>
+                            Зарегистрироваться
+                        </button>
+                    </form>
+                </div>
+            
+            {% elif stage == 'login' %}
+                <!-- Этап входа после подтверждения email -->
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h1>Вход в систему</h1>
+                        <p>Email: <strong>{{ email }}</strong></p>
                     </div>
+                    
+                    <form method="POST" class="login-final-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="login_final" value="1">
+                        <input type="hidden" name="email" value="{{ email }}">
+                        
+                        <div class="form-group">
+                            <label for="id_password">Пароль:</label>
+                            <div class="input-wrapper password-wrapper">
+                                <input 
+                                    type="password" 
+                                    name="password" 
+                                    class="form-control" 
+                                    placeholder="Введите пароль" 
+                                    required
+                                    id="id_password">
+                                <button type="button" class="password-toggle" onclick="togglePassword('id_password')">
+                                    <span class="eye-icon">👁️</span>
+                                </button>
+                            </div>
+                            {% for error in login_form.password.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
 
-                    <button type="submit">Войти</button>
-                </form>
+                        <button type="submit" class="btn-primary">
+                            <span class="btn-icon">🚀</span>
+                            Войти
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Безопасность</h4>
+                    <p>Ваши данные защищены и сохраняются в PostgreSQL</p>
+                </div>
             </div>
-        {% endif %}
-
-        <footer>
-            <p>Ваши данные защищены и сохраняются в PostgreSQL</p>
-        </footer>
-    </div>
+        </div>
+    </footer>
 
     <script>
         function showRegistration() {
@@ -201,6 +301,22 @@
             document.querySelector('.registration-form').classList.remove('active');
             document.querySelectorAll('.tab-btn')[1].classList.add('active');
             document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+        }
+        
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.parentNode.querySelector('.password-toggle');
+            const eyeIcon = button.querySelector('.eye-icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.textContent = '🙈';
+                button.setAttribute('title', 'Скрыть пароль');
+            } else {
+                input.type = 'password';
+                eyeIcon.textContent = '👁️';
+                button.setAttribute('title', 'Показать пароль');
+            }
         }
         
         function resendCode() {

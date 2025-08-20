@@ -1,175 +1,611 @@
-<!-- tests/templates/tests/results.html - ИСПРАВЛЕННАЯ ВЕРСИЯ -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Результаты тестирования</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Результаты тестирования</title>
     <style>
-        .results-card { border-radius: 15px; }
-        .score-circle { 
-            width: 150px; 
-            height: 150px; 
-            border-radius: 50%; 
+        /* CSS Variables */
+        :root {
+            --primary-color: #22c55e;
+            --primary-hover: #16a34a;
+            --secondary-color: #a855f7;
+            --secondary-hover: #9333ea;
+            --accent-color: #6b7280;
+            --accent-hover: #4b5563;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --info-color: #3b82f6;
+            
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #f3f4f6;
+            
+            --border-color: #e5e7eb;
+            --border-hover: #d1d5db;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            --transition: all 0.2s ease-in-out;
+            --transition-slow: all 0.3s ease-in-out;
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+        }
+
+        .logo-accent {
+            color: var(--primary-color);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        .user-greeting {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 2rem 0;
+        }
+
+        /* Results Cards */
+        .results-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .results-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .results-body {
+            padding: 2rem;
+        }
+
+        /* Score Circle */
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
             color: white;
-            margin: 0 auto;
+            margin: 0 auto 1rem;
         }
-        .score-excellent { background: linear-gradient(135deg, #28a745, #20c997); }
-        .score-good { background: linear-gradient(135deg, #17a2b8, #007bff); }
-        .score-average { background: linear-gradient(135deg, #ffc107, #fd7e14); }
-        .score-poor { background: linear-gradient(135deg, #dc3545, #e83e8c); }
-        .answer-correct { background-color: #d4edda; border-left: 4px solid #28a745; }
-        .answer-incorrect { background-color: #f8d7da; border-left: 4px solid #dc3545; }
+
+        .score-excellent {
+            background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, var(--info-color) 0%, #2563eb 100%);
+        }
+
+        .score-average {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #ea580c 100%);
+        }
+
+        .score-poor {
+            background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .stat-correct .stat-icon {
+            color: var(--success-color);
+        }
+
+        .stat-correct .stat-value {
+            color: var(--success-color);
+        }
+
+        .stat-incorrect .stat-icon {
+            color: var(--error-color);
+        }
+
+        .stat-incorrect .stat-value {
+            color: var(--error-color);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Category Stats */
+        .category-stats {
+            margin-top: 2rem;
+        }
+
+        .category-item {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .category-percentage {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: var(--radius-lg);
+            transition: width 0.3s ease;
+        }
+
+        .progress-excellent {
+            background: var(--success-color);
+        }
+
+        .progress-good {
+            background: var(--info-color);
+        }
+
+        .progress-average {
+            background: var(--warning-color);
+        }
+
+        .progress-poor {
+            background: var(--error-color);
+        }
+
+        /* Answer Details */
+        .answer-item {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .answer-correct {
+            border-left-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .answer-incorrect {
+            border-left-color: var(--error-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .answer-word {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .answer-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-hover);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container py-4">
-        <div class="row">
-            <div class="col-md-10 mx-auto">
-                <!-- Основные результаты -->
-                <div class="card results-card shadow mb-4">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h2 class="mb-0"><i class="fas fa-trophy me-2"></i>Результаты тестирования</h2>
-                    </div>
-                    <div class="card-body py-5">
-                        <div class="row text-center">
-                            <div class="col-md-4 mb-4">
-                                <div class="score-circle 
-                                    {% if success_rate >= 90 %}score-excellent
-                                    {% elif success_rate >= 70 %}score-good
-                                    {% elif success_rate >= 50 %}score-average
-                                    {% else %}score-poor{% endif %}">
-                                    {{ success_rate }}%
-                                </div>
-                                <h5 class="mt-3">Успешность</h5>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="mb-3">
-                                    <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
-                                </div>
-                                <h3 class="text-success">{{ test_session.correct_answers }}</h3>
-                                <h5>Правильных ответов</h5>
-                            </div>
-                            <div class="col-md-4 mb-4">
-                                <div class="mb-3">
-                                    <i class="fas fa-times-circle text-danger" style="font-size: 3rem;"></i>
-                                </div>
-                                <h3 class="text-danger">{{ test_session.incorrect_answers }}</h3>
-                                <h5>Неправильных ответов</h5>
-                            </div>
-                        </div>
-
-                        <div class="row text-center mt-4">
-                            <div class="col-md-6">
-                                <p class="text-muted mb-1">Время тестирования:</p>
-                                <h5><i class="fas fa-clock me-2"></i>{{ duration }} мин.</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="text-muted mb-1">Категории:</p>
-                                <h5><i class="fas fa-tags me-2"></i>{{ test_session.get_categories_display }}</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Статистика по категориям -->
-                {% if category_stats %}
-                <div class="card results-card shadow mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Результаты по категориям</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            {% for category, stats in category_stats.items %}
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 border rounded">
-                                    <h6 class="mb-2">{{ category|title }}</h6>
-                                    <div class="progress mb-2" style="height: 20px;">
-                                        <div class="progress-bar 
-                                            {% if stats.percentage >= 80 %}bg-success
-                                            {% elif stats.percentage >= 60 %}bg-info  
-                                            {% elif stats.percentage >= 40 %}bg-warning
-                                            {% else %}bg-danger{% endif %}" 
-                                            style="width: {{ stats.percentage }}%">
-                                            {{ stats.percentage }}%
-                                        </div>
-                                    </div>
-                                    <small class="text-muted">{{ stats.correct }}/{{ stats.total }} правильно</small>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
+            </div>
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Привет, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="btn-login">Выйти</a>
                 {% endif %}
+            </div>
+        </div>
+    </header>
 
-                <!-- Детальные ответы -->
-                <div class="card results-card shadow mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Детальные результаты</h5>
+    <main class="main">
+        <div class="container">
+            <!-- Основные результаты -->
+            <div class="results-card">
+                <div class="results-header">
+                    <h2>🏆 Результаты тестирования</h2>
+                </div>
+                <div class="results-body">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="score-circle 
+                                {% if success_rate >= 90 %}score-excellent
+                                {% elif success_rate >= 70 %}score-good
+                                {% elif success_rate >= 50 %}score-average
+                                {% else %}score-poor{% endif %}">
+                                {{ success_rate }}%
+                            </div>
+                            <div class="stat-label">Успешность</div>
+                        </div>
+                        <div class="stat-item stat-correct">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value">{{ test_session.correct_answers }}</div>
+                            <div class="stat-label">Правильных ответов</div>
+                        </div>
+                        <div class="stat-item stat-incorrect">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-value">{{ test_session.incorrect_answers }}</div>
+                            <div class="stat-label">Неправильных ответов</div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        {% for answer in answers %}
-                        <div class="p-3 mb-3 rounded {% if answer.is_correct %}answer-correct{% else %}answer-incorrect{% endif %}">
-                            <div class="row align-items-center">
-                                <div class="col-md-1 text-center">
-                                    {% if answer.is_correct %}
-                                        <i class="fas fa-check text-success fs-4"></i>
-                                    {% else %}
-                                        <i class="fas fa-times text-danger fs-4"></i>
-                                    {% endif %}
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">⏱️ Время тестирования</div>
+                            <div class="info-value">{{ duration }} мин.</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">🏷️ Категории</div>
+                            <div class="info-value">{{ test_session.get_categories_display }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Статистика по категориям -->
+            {% if category_stats %}
+            <div class="results-card">
+                <div class="results-header">
+                    <h2>📊 Результаты по категориям</h2>
+                </div>
+                <div class="results-body">
+                    <div class="category-stats">
+                        {% for category, stats in category_stats.items %}
+                        <div class="category-item">
+                            <div class="category-header">
+                                <div class="category-name">{{ category|title }}</div>
+                                <div class="category-percentage">{{ stats.percentage }}%</div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill 
+                                    {% if stats.percentage >= 80 %}progress-excellent
+                                    {% elif stats.percentage >= 60 %}progress-good
+                                    {% elif stats.percentage >= 40 %}progress-average
+                                    {% else %}progress-poor{% endif %}" 
+                                    style="width: {{ stats.percentage }}%">
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="mb-1">
-                                        <strong>{{ answer.word.english_word }}</strong> 
-                                        <i class="fas fa-arrow-right mx-2 text-muted"></i>
-                                        <strong>{{ answer.word.russian_translation }}</strong>
-                                    </div>
-                                    <div class="small text-muted">
-                                        Ваш ответ: <span class="{% if answer.is_correct %}text-success{% else %}text-danger{% endif %}">{{ answer.user_answer }}</span>
-                                        {% if answer.word.category %}
-                                        | Категория: {{ answer.word.category|title }}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                    <small class="text-muted">{{ answer.answer_time|date:"H:i:s" }}</small>
-                                </div>
+                            </div>
+                            <div class="answer-details">
+                                Правильно: {{ stats.correct }}/{{ stats.total }}
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="mb-3">
-                        <i class="fas fa-clock fa-3x text-info"></i>
-                    </div>
-                    <h3>{{ duration }}</h3>
-                    <h5>Минут</h5>
+            </div>
+            {% endif %}
+
+            <!-- Детали ответов -->
+            {% if answer_details %}
+            <div class="results-card">
+                <div class="results-header">
+                    <h2>📝 Детали ответов</h2>
                 </div>
-                <!-- Кнопки действий -->
-                <div class="text-center">
-                    <a href="{% url 'tests:categories' %}" class="btn btn-primary btn-lg me-3">
-                        <i class="fas fa-redo me-2"></i>Пройти еще один тест
-                    </a>
-                    <a href="{% url 'tests:history' %}" class="btn btn-outline-secondary btn-lg me-3">
-                        <i class="fas fa-history me-2"></i>История тестов
-                    </a>
-                    <a href="/dictionary" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-home me-2"></i>К словарю
-                    </a>
+                <div class="results-body">
+                    {% for answer in answer_details %}
+                    <div class="answer-item {% if answer.is_correct %}answer-correct{% else %}answer-incorrect{% endif %}">
+                        <div class="answer-word">
+                            {{ answer.word.english_word }} - {{ answer.word.russian_translation }}
+                        </div>
+                        <div class="answer-details">
+                            {% if answer.is_correct %}
+                                ✅ Ваш ответ: {{ answer.user_answer }}
+                            {% else %}
+                                ❌ Ваш ответ: {{ answer.user_answer }} | ✅ Правильно: {{ answer.correct_answer }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
-    </div>
+            {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Действия -->
+            <div class="actions">
+                <a href="{% url 'tests:index' %}" class="btn btn-primary">
+                    🏠 На главную тестов
+                </a>
+                <a href="{% url 'tests:history' %}" class="btn btn-secondary">
+                    📊 История тестов
+                </a>
+                <a href="{% url 'dictionary:index' %}" class="btn btn-outline">
+                    📚 К словарю
+                </a>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

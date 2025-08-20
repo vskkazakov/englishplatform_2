@@ -2,181 +2,272 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Добавить новое слово — Английский Словарь</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Добавить слово</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'dictionary/styles.css' %}?v=2.2">
 </head>
-<body class="bg-light">
-    <div class="container py-4">
-
-        <div class="row mb-3">
-            <div class="col-12 text-center">
-                <h2 class="mb-1 text-primary"><i class="fas fa-plus"></i> Добавить новое слово</h2>
-                <div class="text-muted">Максимально быстрый ввод нового слова</div>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
+            </div>
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Привет, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="btn-login">Выйти</a>
+                {% endif %}
             </div>
         </div>
+    </header>
 
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-
-                <form method="post" autocomplete="off" id="wordForm">
-                    {% csrf_token %}
-
-                    <!-- Категория (сразу в начале!) -->
-                    <div class="mb-3">
-                        <label for="{{ form.category.id_for_label }}" class="form-label fw-bold">
-                            <i class="fas fa-tags text-primary"></i> {{ form.category.label }}
-                        </label>
-                        {{ form.category }}
-                        {% if form.category.errors %}
-                            <div class="text-danger small mt-1">
-                                {{ form.category.errors.0 }}
-                            </div>
-                        {% endif %}
-                        <div class="form-text">Выберите категорию, чтобы распределять слова по темам. По категориям будет удобно учить и тестировать!</div>
-                    </div>
-
-                    <hr>
-
-                    <!-- Английское слово и перевод — максимально быстро! -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="{{ form.english_word.id_for_label }}" class="form-label fw-bold">
-                                <i class="fas fa-language text-primary"></i> {{ form.english_word.label }} *
-                            </label>
-                            {{ form.english_word }}
-                            {% if form.english_word.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.english_word.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6">
-                            <label for="{{ form.russian_translation.id_for_label }}" class="form-label fw-bold">
-                                <i class="fas fa-globe text-success"></i> {{ form.russian_translation.label }} *
-                            </label>
-                            {{ form.russian_translation }}
-                            {% if form.russian_translation.errors %}
-                                <div class="text-danger small mt-1">
-                                    {{ form.russian_translation.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Кнопка сохранения в упрощённом режиме -->
-                    <div class="d-flex justify-content-end align-items-center my-3">
-                        <button type="submit" class="btn btn-success me-2">
-                            <i class="fas fa-save"></i> Сохранить слово
-                        </button>
-                        <button type="reset" class="btn btn-outline-secondary">
-                            <i class="fas fa-undo"></i> Очистить
-                        </button>
-                        <a href="{% url 'dictionary:index' %}" class="btn btn-outline-dark ms-2">
-                            <i class="fas fa-arrow-left"></i> Назад
-                        </a>
-                    </div>
-
-                    <hr>
-
-                    <!-- Скрытая секция для опциональных полей -->
-                    <div class="accordion" id="optionalFields">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOptional">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptional" aria-expanded="false" aria-controls="collapseOptional">
-                                    Дополнительные параметры (заполняйте, если есть время)
-                                </button>
-                            </h2>
-                            <div id="collapseOptional" class="accordion-collapse collapse" aria-labelledby="headingOptional" data-bs-parent="#optionalFields">
-                                <div class="accordion-body">
-                                    
-                                    <!-- Транскрипция -->
-                                    <div class="mb-3">
-                                        <label for="{{ form.transcription.id_for_label }}" class="form-label fw-bold">
-                                            <i class="fas fa-volume-up text-info"></i> {{ form.transcription.label }}
-                                        </label>
-                                        {{ form.transcription }}
-                                        {% if form.transcription.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ form.transcription.errors.0 }}
-                                            </div>
-                                        {% endif %}
-                                        <div class="form-text">Фонетическая транскрипция поможет правильно произносить слово</div>
-                                    </div>
-
-                                    <!-- Определение -->
-                                    <div class="mb-3">
-                                        <label for="{{ form.definition.id_for_label }}" class="form-label fw-bold">
-                                            <i class="fas fa-book-open text-warning"></i> {{ form.definition.label }}
-                                        </label>
-                                        {{ form.definition }}
-                                        {% if form.definition.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ form.definition.errors.0 }}
-                                            </div>
-                                        {% endif %}
-                                        <div class="form-text">Определение слова на английском языке</div>
-                                    </div>
-
-                                    <!-- Пример предложения -->
-                                    <div class="mb-3">
-                                        <label for="{{ form.example_sentence.id_for_label }}" class="form-label fw-bold">
-                                            <i class="fas fa-quote-right text-secondary"></i> {{ form.example_sentence.label }}
-                                        </label>
-                                        {{ form.example_sentence }}
-                                        {% if form.example_sentence.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ form.example_sentence.errors.0 }}
-                                            </div>
-                                        {% endif %}
-                                        <div class="form-text">Пример использования слова в предложении</div>
-                                    </div>
-
-                                    <!-- Уровень сложности -->
-                                    <div class="mb-3">
-                                        <label for="{{ form.difficulty_level.id_for_label }}" class="form-label fw-bold">
-                                            <i class="fas fa-signal text-warning"></i> {{ form.difficulty_level.label }}
-                                        </label>
-                                        {{ form.difficulty_level }}
-                                        {% if form.difficulty_level.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ form.difficulty_level.errors.0 }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-        <!-- Сообщения -->
-        {% if messages %}
-        <div class="row mt-3">
-            <div class="col-md-7 mx-auto">
-                {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {% if message.tags == 'success' %}
-                        <strong>Успех!</strong>
-                    {% elif message.tags == 'error' %}
-                        <strong>Ошибка!</strong>
-                    {% elif message.tags == 'warning' %}
-                        <strong>Внимание!</strong>
-                    {% else %}
-                        <strong>Информация:</strong>
-                    {% endif %}
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-accent">Добавить новое слово</span>
+                    </h1>
+                    <p class="hero-description">
+                        Максимально быстрый ввод нового слова в ваш словарь
+                    </p>
                 </div>
-                {% endfor %}
+            </section>
+
+            <!-- Форма добавления -->
+            <section class="add-word-form">
+                <div class="form-container">
+                    <form method="post" autocomplete="off" id="wordForm">
+                        {% csrf_token %}
+
+                        <!-- Категория -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">📁 Категория</h3>
+                            <div class="form-group">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    {{ form.category.label }}
+                                </label>
+                                {{ form.category }}
+                                {% if form.category.errors %}
+                                    <div class="error-message">
+                                        {{ form.category.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-help">
+                                    Выберите категорию, чтобы распределять слова по темам. По категориям будет удобно учить и тестировать!
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Основные поля -->
+                        <div class="form-section">
+                            <h3 class="section-title-small">✨ Основная информация</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="{{ form.english_word.id_for_label }}" class="form-label">
+                                        🇬🇧 {{ form.english_word.label }} *
+                                    </label>
+                                    {{ form.english_word }}
+                                    {% if form.english_word.errors %}
+                                        <div class="error-message">
+                                            {{ form.english_word.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.russian_translation.id_for_label }}" class="form-label">
+                                        🇷🇺 {{ form.russian_translation.label }} *
+                                    </label>
+                                    {{ form.russian_translation }}
+                                    {% if form.russian_translation.errors %}
+                                        <div class="error-message">
+                                            {{ form.russian_translation.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопки действий -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <span class="btn-icon">💾</span>
+                                Сохранить слово
+                            </button>
+                            <button type="reset" class="btn-secondary">
+                                <span class="btn-icon">🔄</span>
+                                Очистить
+                            </button>
+                            <a href="{% url 'dictionary:index' %}" class="btn-secondary">
+                                <span class="btn-icon">⬅️</span>
+                                Назад
+                            </a>
+                        </div>
+
+                        <!-- Дополнительные поля -->
+                        <div class="form-section optional-section">
+                            <div class="optional-header" onclick="toggleOptional()">
+                                <h3 class="section-title-small">⚙️ Дополнительные параметры</h3>
+                                <span class="toggle-icon">📖</span>
+                                <div class="toggle-text">Заполняйте, если есть время</div>
+                            </div>
+                            
+                            <div class="optional-content" id="optionalContent">
+                                <!-- Транскрипция -->
+                                <div class="form-group">
+                                    <label for="{{ form.transcription.id_for_label }}" class="form-label">
+                                        🔊 {{ form.transcription.label }}
+                                    </label>
+                                    {{ form.transcription }}
+                                    {% if form.transcription.errors %}
+                                        <div class="error-message">
+                                            {{ form.transcription.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-help">
+                                        Фонетическая транскрипция поможет правильно произносить слово
+                                    </div>
+                                </div>
+
+                                <!-- Определение -->
+                                <div class="form-group">
+                                    <label for="{{ form.definition.id_for_label }}" class="form-label">
+                                        📚 {{ form.definition.label }}
+                                    </label>
+                                    {{ form.definition }}
+                                    {% if form.definition.errors %}
+                                        <div class="error-message">
+                                            {{ form.definition.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-help">
+                                        Определение слова на английском языке
+                                    </div>
+                                </div>
+
+                                <!-- Пример предложения -->
+                                <div class="form-group">
+                                    <label for="{{ form.example_sentence.id_for_label }}" class="form-label">
+                                        💬 {{ form.example_sentence.label }}
+                                    </label>
+                                    {{ form.example_sentence }}
+                                    {% if form.example_sentence.errors %}
+                                        <div class="error-message">
+                                            {{ form.example_sentence.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-help">
+                                        Пример использования слова в предложении
+                                    </div>
+                                </div>
+
+                                <!-- Уровень сложности -->
+                                <div class="form-group">
+                                    <label for="{{ form.difficulty_level.id_for_label }}" class="form-label">
+                                        📊 {{ form.difficulty_level.label }}
+                                    </label>
+                                    {{ form.difficulty_level }}
+                                    {% if form.difficulty_level.errors %}
+                                        <div class="error-message">
+                                            {{ form.difficulty_level.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Сообщения -->
+            {% if messages %}
+            <section class="messages-section">
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">
+                            <div class="message-icon">
+                                {% if message.tags == 'success' %}
+                                    ✅
+                                {% elif message.tags == 'error' %}
+                                    ❌
+                                {% elif message.tags == 'warning' %}
+                                    ⚠️
+                                {% else %}
+                                    ℹ️
+                                {% endif %}
+                            </div>
+                            <div class="message-content">
+                                <div class="message-title">
+                                    {% if message.tags == 'success' %}
+                                        Успех!
+                                    {% elif message.tags == 'error' %}
+                                        Ошибка!
+                                    {% elif message.tags == 'warning' %}
+                                        Внимание!
+                                    {% else %}
+                                        Информация:
+                                    {% endif %}
+                                </div>
+                                <div class="message-text">{{ message }}</div>
+                            </div>
+                            <button class="message-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Добавление слов</h4>
+                    <p>Расширяйте свой словарный запас</p>
+                </div>
             </div>
         </div>
-        {% endif %}
+    </footer>
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/ac57da2812.js" crossorigin="anonymous"></script>
+    <script>
+        function toggleOptional() {
+            const content = document.getElementById('optionalContent');
+            const toggleIcon = document.querySelector('.toggle-icon');
+            const toggleText = document.querySelector('.toggle-text');
+            
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                toggleIcon.textContent = '📖';
+                toggleText.textContent = 'Скрыть дополнительные поля';
+            } else {
+                content.style.display = 'none';
+                toggleIcon.textContent = '📖';
+                toggleText.textContent = 'Заполняйте, если есть время';
+            }
+        }
+
+        // Автоматическое скрытие уведомлений через 5 секунд
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            });
+        }, 5000);
+    </script>
 </body>
 </html>

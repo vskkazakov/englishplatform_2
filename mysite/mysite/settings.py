@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'dictionary',
     'authen',
     'students',
-    'act_static'
+    'act_static',
+    'teacher'
 ]
 
 MIDDLEWARE = [

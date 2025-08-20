@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мои ученики{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Мои ученики</h2>
+            
+            <!-- Входящие запросы от учеников -->
+            {% if incoming_requests %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Входящие запросы от учеников</h4>
+                </div>
+                <div class="card-body">
+                    {% for request in incoming_requests %}
+                    <div class="request-item mb-3 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6>{{ request.student.get_full_name|default:request.student.username }}</h6>
+                                <p class="text-muted">{{ request.message }}</p>
+                                <small class="text-muted">Отправлено: {{ request.created_at|date:"d.m.Y H:i" }}</small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button class="btn btn-success btn-sm" onclick="respondToRequest({{ request.id }}, 'accepted')">
+                                    Принять
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="respondToRequest({{ request.id }}, 'rejected')">
+                                    Отклонить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Мои ученики -->
+            {% if relationships %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Мои ученики</h4>
+                </div>
+                <div class="card-body">
+                    {% for relationship in relationships %}
+                    <div class="student-item mb-3 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>{{ relationship.student.get_full_name|default:relationship.student.username }}</h6>
+                                <p class="text-muted">{{ relationship.student.email }}</p>
+                                <small class="text-muted">С: {{ relationship.started_at|date:"d.m.Y" }}</small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <button class="btn btn-primary btn-sm" onclick="showHomeworkModal('{{ relationship.student.email }}', '{{ relationship.student.get_full_name|default:relationship.student.username }}')">
+                                    Создать задание
+                                </button>
+                                <a href="#" class="btn btn-info btn-sm" onclick="viewHomework('{{ relationship.student.email }}')">
+                                    Задания
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Домашние задания -->
+            {% if homework_list %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Домашние задания</h4>
+                </div>
+                <div class="card-body">
+                    {% for homework in homework_list %}
+                    <div class="homework-item mb-3 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6>{{ homework.title }}</h6>
+                                <p class="text-muted">{{ homework.description|truncatechars:100 }}</p>
+                                <small class="text-muted">
+                                    Для: {{ homework.student.get_full_name|default:homework.student.username }} | 
+                                    Срок: {{ homework.due_date|date:"d.m.Y H:i" }} | 
+                                    Статус: 
+                                    {% if homework.is_completed %}
+                                        <span class="badge bg-success">Выполнено</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">В процессе</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <a href="{% url 'students:view_homework' homework_id=homework.id %}" class="btn btn-info btn-sm">
+                                    Просмотр
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if not relationships and not incoming_requests %}
+            <div class="text-center py-5">
+                <h4>У вас пока нет учеников</h4>
+                <p class="text-muted">Отправьте приглашения ученикам, чтобы начать обучение</p>
+                <a href="{% url 'students:index' %}" class="btn btn-primary">Найти учеников</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для создания домашнего задания -->
+<div id="homeworkModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Создать домашнее задание</h3>
+            <button class="modal-close" onclick="closeHomeworkModal()">×</button>
+        </div>
+        <form id="homeworkForm" class="homework-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title" class="form-label">Название задания</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Описание</label>
+                <textarea id="description" name="description" rows="4" class="form-control" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="due_date" class="form-label">Срок выполнения</label>
+                <input type="datetime-local" id="due_date" name="due_date" class="form-control" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Создать задание</button>
+                <button type="button" class="btn btn-secondary" onclick="closeHomeworkModal()">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+let currentStudentEmail = null;
+let currentStudentName = '';
+
+function showHomeworkModal(studentEmail, studentName) {
+    currentStudentEmail = studentEmail;
+    currentStudentName = studentName;
+    document.getElementById('homeworkModal').style.display = 'flex';
+}
+
+function closeHomeworkModal() {
+    document.getElementById('homeworkModal').style.display = 'none';
+    document.getElementById('homeworkForm').reset();
+}
+
+function respondToRequest(requestId, status) {
+    if (confirm('Вы уверены, что хотите ' + (status === 'accepted' ? 'принять' : 'отклонить') + ' этого ученика?')) {
+        const formData = new FormData();
+        formData.append('status', status);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+        
+        fetch(`/students/respond-request/${requestId}/`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка');
+        });
+    }
+}
+
+function viewHomework(studentEmail) {
+    // Здесь можно добавить логику для просмотра заданий конкретного ученика
+    alert('Просмотр заданий для ученика: ' + studentEmail);
+}
+
+document.getElementById('homeworkForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Отправляем форму на создание домашнего задания
+    fetch(`/students/create-homework/${currentStudentEmail}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closeHomeworkModal();
+            location.reload();
+        } else {
+            alert('Ошибка: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при создании задания');
+    });
+});
+
+// Скрыть модальные окна при клике вне их
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}
+</script>
+
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+</style>
+{% endblock %}

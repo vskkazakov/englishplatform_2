@@ -1,265 +1,264 @@
-<!-- dictionary/templates/dictionary/view_words.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои слова - Словарь</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .word-card {
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-        .word-card:hover {
-            border-color: #007bff;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.15);
-            transform: translateY(-2px);
-        }
-        .word-card.learned {
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-            border-color: #28a745;
-        }
-        .word-card.needs-practice {
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border-color: #ffc107;
-        }
-        .category-badge {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            display: inline-block;
-        }
-        .progress-ring {
-            width: 40px;
-            height: 40px;
-        }
-        .word-actions {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .word-card:hover .word-actions {
-            opacity: 1;
-        }
-    </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Entertaining English - Мои слова</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'dictionary/styles.css' %}?v=2.3">
 </head>
-<body class="bg-light">
-    <div class="container py-4">
-        <!-- Заголовок и статистика -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2><i class="fas fa-book text-primary me-2"></i>Мои слова</h2>
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'dictionary:add_word' %}" class="btn btn-primary">
-                            <i class="fas fa-plus me-1"></i>Добавить слово
-                        </a>
-                        <a href="{% url 'dictionary:select_category' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-layer-group me-1"></i>По категориям
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <div class="bg-primary bg-opacity-10 p-3 rounded text-center">
-                            <h5 class="text-primary mb-1">📚 Всего слов</h5>
-                            <h3>{{ total_words }}</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="bg-success bg-opacity-10 p-3 rounded text-center">
-                            <h5 class="text-success mb-1">✅ Найдено</h5>
-                            <h3>{{ total_filtered }}</h3>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="bg-info bg-opacity-10 p-3 rounded text-center">
-                            <h5 class="text-info mb-1">🎯 Изучено</h5>
-                            <h3>{{ learned_filtered }}</h3>
-                        </div>
-                    </div>
-                </div>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
+            </div>
+            <div class="nav">
+                <a href="{% url 'index' %}" class="nav-link">На главную</a>
+                <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
+                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
+                <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
+                {% if user.is_authenticated %}
+                    <span class="user-greeting">Привет, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'authen:logout' %}" class="btn-login">Выйти</a>
+                {% endif %}
             </div>
         </div>
+    </header>
 
-        <!-- Фильтры поиска -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <form method="get" class="row g-3">
-                    <div class="col-md-3">
-                        {{ search_form.search_query }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ search_form.category }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ search_form.difficulty_level }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ search_form.status }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ search_form.sort_by }}
-                    </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок и статистика -->
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-accent">Мои слова</span>
+                    </h1>
+                    <p class="hero-description">
+                        Управляйте своим словарным запасом и отслеживайте прогресс
+                    </p>
+                </div>
+            </section>
 
-        <!-- Карточки слов -->
-        {% if words %}
-            <div class="row">
-                {% for word in words %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card word-card {% if word.is_learned %}learned{% elif word.needs_practice %}needs-practice{% endif %}">
-                        <div class="card-body">
-                            <!-- Категория и прогресс -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <!-- 🔧 ДОБАВЛЕНА КАТЕГОРИЯ -->
-                                <span class="category-badge">{{ word.category|title }}</span>
-                                
-                                <div class="d-flex align-items-center gap-2">
-                                    <!-- Прогресс изучения -->
-                                    <div class="progress-circle" style="--progress: {{ word.get_progress_percentage }}%">
-                                        <small class="text-muted">{{ word.times_practiced }}</small>
-                                    </div>
-                                    
-                                    <!-- Статус изученности -->
-                                    {% if word.is_learned %}
-                                        <span class="badge bg-success">✓</span>
-                                    {% elif word.needs_practice %}
-                                        <span class="badge bg-warning">!</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+            <!-- Действия -->
+            <section class="actions-section">
+                <div class="actions-menu">
+                    <a href="{% url 'dictionary:add_word' %}" class="action-link">
+                        <span class="action-icon">➕</span>
+                        Добавить слово
+                    </a>
+                    <a href="{% url 'dictionary:select_category' %}" class="action-link">
+                        <span class="action-icon">📁</span>
+                        По категориям
+                    </a>
+                </div>
+            </section>
 
-                            <!-- Основное содержимое -->
-                            <h5 class="card-title text-primary mb-2">{{ word.english_word|title }}</h5>
-                            
-                            {% if word.transcription %}
-                                <p class="text-muted small mb-1">{{ word.transcription }}</p>
-                            {% endif %}
-                            
-                            <p class="card-text mb-2">
-                                <strong>{{ word.russian_translation }}</strong>
-                            </p>
-                            
-                            {% if word.definition %}
-                                <p class="small text-muted mb-2">{{ word.definition }}</p>
-                            {% endif %}
-                            
-                            {% if word.example_sentence %}
-                                <p class="small fst-italic mb-3">{{ word.example_sentence }}</p>
-                            {% endif %}
-
-                            <!-- Метаданные -->
-                            <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
-                                <span>
-                                    <i class="fas fa-signal me-1"></i>
-                                    {{ word.get_difficulty_level_display }}
-                                </span>
-                                <span>
-                                    <i class="fas fa-calendar me-1"></i>
-                                    {{ word.created_at|date:"d.m.Y" }}
-                                </span>
-                            </div>
-                            
-                            {% if word.last_practiced %}
-                                <div class="small text-muted mb-3">
-                                    <i class="fas fa-clock me-1"></i>
-                                    Изучалось: {{ word.last_practiced|date:"d.m.Y" }}
-                                </div>
-                            {% endif %}
-
-                            <!-- Действия -->
-                            <div class="word-actions d-flex gap-1">
-                                <a href="{% url 'dictionary:edit_word' word.id %}" 
-                                   class="btn btn-sm btn-outline-primary flex-fill">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                
-                                <form method="post" action="{% url 'dictionary:toggle_learned' word.id %}" class="flex-fill">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm w-100 {% if word.is_learned %}btn-success{% else %}btn-outline-success{% endif %}">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </form>
-                                
-                                <form method="post" action="{% url 'dictionary:delete_word' word.id %}" 
-                                      class="flex-fill" 
-                                      onsubmit="return confirm('Удалить слово {{ word.english_word }}?')">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+            <!-- Статистика -->
+            <section class="stats-overview">
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-number">{{ total_words }}</div>
+                        <div class="stat-label">Всего слов</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-number">{{ total_filtered }}</div>
+                        <div class="stat-label">Найдено</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-number">{{ learned_filtered }}</div>
+                        <div class="stat-label">Изучено</div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
+            </section>
 
-            <!-- Пагинация -->
-            {% if words.has_other_pages %}
-                <nav aria-label="Навигация по страницам">
-                    <ul class="pagination justify-content-center">
+            <!-- Фильтры поиска -->
+            <section class="search-filters">
+                <div class="filters-container">
+                    <form method="get" class="filters-form">
+                        <div class="filters-row">
+                            <div class="filter-group">
+                                {{ search_form.search_query }}
+                            </div>
+                            <div class="filter-group">
+                                {{ search_form.category }}
+                            </div>
+                            <div class="filter-group">
+                                {{ search_form.difficulty_level }}
+                            </div>
+                            <div class="filter-group">
+                                {{ search_form.status }}
+                            </div>
+                            <div class="filter-group">
+                                {{ search_form.sort_by }}
+                            </div>
+                            <div class="filter-group">
+                                <button type="submit" class="btn-primary">
+                                    <span class="btn-icon">🔍</span>
+                                    Поиск
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Карточки слов -->
+            {% if words %}
+            <section class="words-section">
+                <div class="words-grid">
+                    {% for word in words %}
+                    <div class="word-card {% if word.is_learned %}learned{% elif word.needs_practice %}needs-practice{% endif %}">
+                        <!-- Категория и прогресс -->
+                        <div class="word-header">
+                            <span class="word-category">{{ word.category|title }}</span>
+                            <div class="word-progress">
+                                <div class="progress-circle" style="--progress: {{ word.get_progress_percentage }}%">
+                                    <span class="progress-text">{{ word.times_practiced }}</span>
+                                </div>
+                                {% if word.is_learned %}
+                                    <span class="word-status learned">✓</span>
+                                {% elif word.needs_practice %}
+                                    <span class="word-status needs-practice">!</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Основное содержимое -->
+                        <h3 class="word-english">{{ word.english_word|title }}</h3>
+                        
+                        {% if word.transcription %}
+                            <p class="word-transcription">{{ word.transcription }}</p>
+                        {% endif %}
+                        
+                        <p class="word-translation">{{ word.russian_translation }}</p>
+                        
+                        {% if word.definition %}
+                            <p class="word-definition">{{ word.definition }}</p>
+                        {% endif %}
+                        
+                        {% if word.example_sentence %}
+                            <p class="word-example">{{ word.example_sentence }}</p>
+                        {% endif %}
+
+                        <!-- Метаданные -->
+                        <div class="word-meta">
+                            <span class="meta-item">
+                                📊 {{ word.get_difficulty_level_display }}
+                            </span>
+                            <span class="meta-item">
+                                📅 {{ word.created_at|date:"d.m.Y" }}
+                            </span>
+                        </div>
+                        
+                        {% if word.last_practiced %}
+                            <div class="word-last-practiced">
+                                ⏰ Изучалось: {{ word.last_practiced|date:"d.m.Y" }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Действия -->
+                        <div class="word-actions">
+                            <a href="{% url 'dictionary:edit_word' word.id %}" class="btn-secondary">
+                                <span class="btn-icon">✏️</span>
+                                Редактировать
+                            </a>
+                            
+                            <form method="post" action="{% url 'dictionary:toggle_learned' word.id %}" class="action-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn {% if word.is_learned %}btn-success{% else %}btn-outline-success{% endif %}">
+                                    <span class="btn-icon">✓</span>
+                                    {% if word.is_learned %}Изучено{% else %}Изучить{% endif %}
+                                </button>
+                            </form>
+                            
+                            <form method="post" action="{% url 'dictionary:delete_word' word.id %}" 
+                                  class="action-form" 
+                                  onsubmit="return confirm('Удалить слово {{ word.english_word }}?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <span class="btn-icon">🗑️</span>
+                                    Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Пагинация -->
+                {% if words.has_other_pages %}
+                <section class="pagination-section">
+                    <div class="pagination">
                         {% if words.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ words.previous_page_number }}">Назад</a>
-                            </li>
+                            <a href="?page={{ words.previous_page_number }}" class="page-link">
+                                <span class="btn-icon">⬅️</span>
+                                Назад
+                            </a>
                         {% endif %}
                         
                         {% for num in words.paginator.page_range %}
                             {% if words.number == num %}
-                                <li class="page-item active">
-                                    <span class="page-link">{{ num }}</span>
-                                </li>
+                                <span class="page-link active">{{ num }}</span>
                             {% else %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                                </li>
+                                <a href="?page={{ num }}" class="page-link">{{ num }}</a>
                             {% endif %}
                         {% endfor %}
                         
                         {% if words.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ words.next_page_number }}">Далее</a>
-                            </li>
+                            <a href="?page={{ words.next_page_number }}" class="page-link">
+                                Далее
+                                <span class="btn-icon">➡️</span>
+                            </a>
                         {% endif %}
-                    </ul>
-                </nav>
-            {% endif %}
-        {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-search fa-4x text-muted mb-3"></i>
-                <h4 class="text-muted">Ничего не найдено</h4>
-                {% if request.GET.search_query or request.GET.category or request.GET.status %}
-                    <p class="text-muted">Попробуйте изменить параметры поиска или очистить фильтры</p>
-                    <a href="{% url 'dictionary:view_words' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-times me-1"></i>Очистить фильтры
-                    </a>
-                {% else %}
-                    <p class="text-muted">У вас еще нет слов в словаре</p>
-                    <a href="{% url 'dictionary:add_word' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Добавить первое слово
-                    </a>
+                    </div>
+                </section>
                 {% endif %}
-            </div>
-        {% endif %}
-    </div>
+            </section>
+            {% else %}
+            <!-- Пустое состояние -->
+            <section class="empty-state">
+                <div class="empty-content">
+                    <div class="empty-icon">🔍</div>
+                    <h3>Ничего не найдено</h3>
+                    {% if request.GET.search_query or request.GET.category or request.GET.status %}
+                        <p>Попробуйте изменить параметры поиска или очистить фильтры</p>
+                        <a href="{% url 'dictionary:view_words' %}" class="btn-secondary">
+                            <span class="btn-icon">🔄</span>
+                            Очистить фильтры
+                        </a>
+                    {% else %}
+                        <p>У вас еще нет слов в словаре</p>
+                        <a href="{% url 'dictionary:add_word' %}" class="btn-primary">
+                            <span class="btn-icon">✨</span>
+                            Добавить первое слово
+                        </a>
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Entertaining English</h4>
+                    <p>Изучение английского стало проще</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Просмотр слов</h4>
+                    <p>Управляйте своим словарным запасом</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
