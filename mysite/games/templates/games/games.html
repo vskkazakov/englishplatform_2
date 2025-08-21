@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -345,11 +345,126 @@
             .header-container {
                 flex-direction: column;
                 gap: 1rem;
+                padding: 1rem 0;
             }
 
             .nav {
                 flex-direction: column;
                 gap: 0.5rem;
+                width: 100%;
+            }
+            
+            .nav-link {
+                padding: 0.75rem 1rem;
+                text-align: center;
+                border-radius: var(--radius-md);
+                background: var(--bg-secondary);
+                margin-bottom: 0.25rem;
+            }
+            
+            .nav-link:hover {
+                background: var(--bg-tertiary);
+            }
+            
+            .logo {
+                font-size: 1.25rem;
+            }
+            
+            .btn-login {
+                width: 100%;
+                text-align: center;
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .header-container {
+                padding: 0.75rem 0;
+            }
+            
+            .nav {
+                gap: 0.25rem;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .hero-title {
+                font-size: 1.75rem;
+            }
+            
+            .hero-description {
+                font-size: 0.9rem;
+            }
+            
+            .game-card {
+                padding: 1rem;
+            }
+            
+            .main {
+                padding: 30px 0;
+            }
+            
+            .hero {
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .container {
+                padding: 0 8px;
+            }
+            
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            
+            .hero-description {
+                font-size: 0.85rem;
+            }
+            
+            .game-card {
+                padding: 0.75rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Стили для устройств с сенсорным экраном */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px;
+                padding: 0.75rem 1.5rem;
+            }
+            
+            .nav-link {
+                min-height: 44px;
+                padding: 0.75rem 1rem;
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .nav-link:hover {
+                background: var(--bg-secondary);
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+            }
+            
+            .nav-link:active {
+                background: var(--bg-tertiary);
             }
         }
     </style>

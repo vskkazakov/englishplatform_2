@@ -174,3 +174,70 @@ class Homework(models.Model):
     
     def __str__(self):
         return f"{self.title} - {self.student.get_full_name()}"
+class CategorySharingRequest(models.Model):
+    """
+    Запрос учителя на передачу категории слов ученику
+    """
+    STATUS_CHOICES = [
+        ('pending', 'Ожидает ответа'),
+        ('accepted', 'Принято'),
+        ('rejected', 'Отклонено'),
+        ('cancelled', 'Отменено'),
+    ]
+
+    teacher = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='category_sharing_requests_sent',
+        verbose_name="Учитель"
+    )
+
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='category_sharing_requests_received',
+        verbose_name="Ученик"
+    )
+
+    # Предполагаем, что в dictionary есть модель Category
+    category = models.ForeignKey(
+        'dictionary.Category',  # Связь с моделью Category из приложения dictionary
+        on_delete=models.CASCADE,
+        verbose_name="Категория"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name="Статус запроса"
+    )
+
+    message = models.TextField(
+        blank=True,
+        verbose_name="Сообщение от учителя"
+    )
+
+    student_response = models.TextField(
+        blank=True,
+        verbose_name="Ответ ученика"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания"
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Дата обновления"
+    )
+
+    class Meta:
+        verbose_name = "Запрос на передачу категории"
+        verbose_name_plural = "Запросы на передачу категорий"
+        unique_together = ['teacher', 'student', 'category']
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.teacher.get_full_name()} → {self.student.get_full_name()}: {self.category.name} ({self.get_status_display()})"

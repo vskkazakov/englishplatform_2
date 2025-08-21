@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>Entertaining English - Мои учителя</title>
-    <link rel="stylesheet" href="{% load static %}{% static 'teacher/styles.css' %}?v=1.0">
+    <title>Entertaining English - Словарь</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'teacher/styles.css' %}?v=2.1">
+    <script src="{% static 'teacher/mobile-nav.js' %}?v=1.0" defer></script>
 </head>
 <body>
-    <header class="header">
+   <header class="header">
         <div class="header-container">
             <div class="logo">
                 <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
@@ -18,7 +19,7 @@
             <div class="nav">
                 <a href="{% url 'index' %}" class="nav-link">На главную</a>
                 <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
-                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="/tests" class="nav-link">Тесты</a>
                 <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
                 <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
                 {% if user.is_authenticated %}
@@ -28,7 +29,6 @@
             </div>
         </div>
     </header>
-
     <main class="main">
         <div class="container">
             {% csrf_token %}
@@ -123,6 +123,57 @@
                 </div>
             </section>
             {% endif %}
+            {% if category_requests %}
+            <section class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">📚 Запросы на категории слов</h2>
+                    <p class="section-description">Учителя предлагают вам новые категории слов для изучения</p>
+                </div>
+                
+                <div class="requests-grid">
+                    {% for request in category_requests %}
+                    <div class="request-card category-request">
+                        <div class="request-header">
+                            <div class="user-avatar">
+                                <div class="avatar-placeholder">{{ request.teacher.first_name|first|upper }}</div>
+                            </div>
+                            <div class="request-info">
+                                <h3 class="request-teacher">{{ request.teacher.get_full_name|default:request.teacher.username }}</h3>
+                                <div class="request-category">
+                                    <strong>📚 {{ request.category.name }}</strong>
+                                    <span class="category-word-count">({{ request.category.words.count }} слов)</span>
+                                </div>
+                                <p class="request-date">📅 Отправлено: {{ request.created_at|date:"d.m.Y H:i" }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if request.message %}
+                        <div class="request-message">
+                            <h4>💬 Сообщение от учителя:</h4>
+                            <p>{{ request.message }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="request-actions">
+                            <button type="button" class="btn-primary accept-category-btn" 
+                                    data-request-id="{{ request.id }}"
+                                    data-category-name="{{ request.category.name }}">
+                                <span class="btn-icon">✅</span>
+                                Принять категорию
+                            </button>
+                            <button type="button" class="btn-secondary reject-category-btn" 
+                                    data-request-id="{{ request.id }}"
+                                    data-category-name="{{ request.category.name }}">
+                                <span class="btn-icon">❌</span>
+                                Отклонить
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
             
             <!-- Домашние задания -->
             {% if homework_list %}
@@ -320,6 +371,88 @@
                 setTimeout(() => message.remove(), 300);
             });
         }, 5000);
+        document.addEventListener('DOMContentLoaded', function() {
+    // Принятие категории
+    document.querySelectorAll('.accept-category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const requestId = this.dataset.requestId;
+            const categoryName = this.dataset.categoryName;
+            
+            if (confirm(`Принять категорию "${categoryName}"? Она будет добавлена в ваш словарь.`)) {
+                respondToCategoryRequest(requestId, 'accepted', '');
+            }
+        });
+    });
+    
+    // Отклонение категории
+    document.querySelectorAll('.reject-category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const requestId = this.dataset.requestId;
+            const categoryName = this.dataset.categoryName;
+            
+            if (confirm(`Отклонить категорию "${categoryName}"?`)) {
+                respondToCategoryRequest(requestId, 'rejected', '');
+            }
+        });
+    });
+});
+
+function respondToCategoryRequest(requestId, status, response) {
+    const formData = new FormData();
+    formData.append('status', status);
+    formData.append('student_response', response);
+    
+    fetch(`{% url "teacher:respond_to_category_request" request_id=0 %}`.replace('0', requestId), {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage(data.message, 'success');
+            // Перезагружаем страницу через 2 секунды
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        } else {
+            showMessage(data.error, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        showMessage('Произошла ошибка при обработке запроса', 'error');
+    });
+}
+
+// Функция показа сообщений (если еще не существует)
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <div class="message-text">${message}</div>
+        </div>
+        <button class="message-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    
+    let messagesContainer = document.querySelector('.messages-container');
+    if (!messagesContainer) {
+        messagesContainer = document.createElement('div');
+        messagesContainer.className = 'messages-container';
+        document.body.appendChild(messagesContainer);
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        if (messageDiv.parentElement) {
+            messageDiv.remove();
+        }
+    }, 5000);
+}
     </script>
 
     <style>

@@ -3,23 +3,50 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinLengthValidator
 
+
+class Category(models.Model):
+    """
+    Модель для категорий слов
+    """
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Название категории"
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Описание категории"
+    )
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='categories',
+        verbose_name="Создатель"
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата создания"
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Дата обновления"
+    )
+
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+        unique_together = ['name', 'created_by']
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.name} ({self.created_by.username})"
+
+
 class Word(models.Model):
     """
     Модель для хранения слов пользователей в словаре
     """
-    is_learned = models.BooleanField(
-        default=False,
-        verbose_name="Выучено"
-    )
-    times_practiced = models.PositiveIntegerField(
-        default=0,
-        verbose_name="Количество повторений"
-    )
-    last_practiced = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name="Последняя практика"
-    )
     # Связь с пользователем
     user = models.ForeignKey(
         User,
@@ -67,10 +94,12 @@ class Word(models.Model):
         help_text="Пример предложения"
     )
 
-    # Категория
-    category = models.CharField(
-        max_length=50,
+    # ИСПРАВЛЕНО: Категория теперь ForeignKey на Category модель
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
         verbose_name="Категория",
+        related_name="words",
         help_text="Категория слова"
     )
 
@@ -91,6 +120,7 @@ class Word(models.Model):
         verbose_name="Уровень сложности"
     )
 
+    # ИСПРАВЛЕНО: Убрал дублирование полей - оставил только одну версию каждого поля
     # Статистика изучения
     is_learned = models.BooleanField(
         default=False,
@@ -292,5 +322,5 @@ class WordStatistics(models.Model):
 
         if self.current_streak > self.best_streak:
             self.best_streak = self.current_streak
-
+        
         self.save(update_fields=['current_streak', 'best_streak', 'last_study_date'])

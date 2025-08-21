@@ -1,5 +1,7 @@
 /* Teacher Styles - Modern Design */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('responsive.css');
+@import url('mobile-nav.css');
 
 /* CSS Variables */
 :root {
@@ -782,4 +784,68 @@ body {
         transform: none;
         box-shadow: var(--shadow-sm);
     }
+}
+/* Стили для модального окна обмена категориями */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-category-btn {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.share-category-btn:hover {
+    background: var(--secondary-hover);
+}
+
+.form-control-static {
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+/* Стили для карточек запросов категорий */
+.category-request {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.request-category {
+    margin: 0.5rem 0;
+}
+
+.category-word-count {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+}
+
+.request-message {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.request-message h4 {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.request-message p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 0;
 }

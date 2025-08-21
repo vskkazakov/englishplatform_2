@@ -5,8 +5,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.utils import timezone
-from .models import StudentRequest, StudentTeacherRelationship, Homework
-from .forms import StudentRequestForm, StudentResponseForm, StudentSearchForm, HomeworkForm
+from .models import StudentRequest, StudentTeacherRelationship, Homework, CategorySharingRequest
+from .forms import StudentRequestForm, StudentResponseForm, StudentSearchForm, HomeworkForm, CategorySharingForm
 from authen.models import UserProfile
 from django.contrib.auth import get_user_model
 
@@ -350,3 +350,192 @@ def get_students_list(request):
         'success': True,
         'students': students_list
     })
+
+@login_required
+def share_category(request, student_id):
+    """
+    Отправка категории ученику - МАКСИМАЛЬНАЯ ОТЛАДКА
+    """
+    print(f"\n" + "="*50)
+    print(f"🔍 SHARE_CATEGORY STARTED")
+    print(f"URL: /students/share-category/{student_id}/")
+    print(f"Method: {request.method}")
+    print(f"User: {request.user} (ID: {request.user.id})")
+    print(f"POST data: {dict(request.POST)}")
+    print(f"GET data: {dict(request.GET)}")
+    print(f"="*50)
+
+    if request.method != 'POST':
+        print("❌ Method is not POST, returning error")
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса. Используйте POST.'})
+    # students/views.py - добавьте в начало share_category
+
+    # Проверяем, что пользователь - учитель
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        print(f"✅ Teacher profile role: {profile.role}")
+        if profile.role != 'teacher':
+            print("❌ User is not teacher")
+            return JsonResponse({'success': False, 'error': 'Только учителя могут отправлять категории'})
+    except UserProfile.DoesNotExist:
+        print("❌ Teacher UserProfile not found")
+        return JsonResponse({'success': False, 'error': 'Профиль не найден'})
+
+    # Получаем студента по ID
+    try:
+        student_user = User.objects.get(id=student_id)
+        student_profile = UserProfile.objects.get(user=student_user, role='student')
+        print(f"✅ Student found: {student_user.username} (ID: {student_user.id}, Email: {student_user.email})")
+    except User.DoesNotExist:
+        print(f"❌ Student User not found with id: {student_id}")
+        return JsonResponse({'success': False, 'error': 'Ученик не найден'})
+    except UserProfile.DoesNotExist:
+        print(f"❌ Student UserProfile not found for user: {student_user.username}")
+        return JsonResponse({'success': False, 'error': 'Ученик не найден'})
+
+    # Проверяем связь учитель-ученик
+    relationship = StudentTeacherRelationship.objects.filter(
+        teacher=request.user,
+        student=student_user,
+        is_active=True
+    ).first()
+    print(f"🔗 Relationship exists: {relationship is not None}")
+    if relationship:
+        print(f"   Teacher: {relationship.teacher.username}")
+        print(f"   Student: {relationship.student.username}")
+        print(f"   Active: {relationship.is_active}")
+
+    if not relationship:
+        print("❌ No active relationship found")
+        return JsonResponse({'success': False, 'error': 'У вас нет активной связи с этим учеником'})
+
+    # Проверяем форму
+    form = CategorySharingForm(teacher=request.user, data=request.POST)
+    print(f"📝 Form validation...")
+    print(f"   Form is valid: {form.is_valid()}")
+    if not form.is_valid():
+        print(f"   Form errors: {form.errors}")
+        return JsonResponse({'success': False, 'error': f'Неверные данные формы: {form.errors}'})
+
+    # Получаем категорию из формы
+    category = form.cleaned_data['category']
+    message = form.cleaned_data.get('message', '')
+    print(f"📚 Selected category: {category.name} (ID: {category.id})")
+    print(f"💬 Message: '{message}'")
+
+    # Проверяем существующие запросы
+    existing_request = CategorySharingRequest.objects.filter(
+        teacher=request.user,
+        student=student_user,
+        category=category
+    ).first()
+    print(f"🔍 Existing request check: {existing_request}")
+
+    if existing_request and existing_request.status == 'pending':
+        print("⚠️  Request already exists and pending")
+        return JsonResponse({'success': False, 'error': 'Запрос на эту категорию уже отправлен'})
+    
+
+    # Обновляем существующий запрос если был отклонен/отменен
+    if existing_request and existing_request.status in ['rejected', 'cancelled']:
+        print("🔄 Updating existing rejected/cancelled request")
+        existing_request.status = 'pending'
+        existing_request.message = message
+        existing_request.save()
+        print(f"✅ Updated request ID: {existing_request.id}")
+        return JsonResponse({
+            'success': True,
+            'message': f'Категория "{category.name}" повторно отправлена ученику {student_user.get_full_name()}'
+        })
+
+    # Создаем новый запрос
+    print("🆕 Creating NEW CategorySharingRequest...")
+    try:
+        request_obj = form.save(commit=False)
+        request_obj.teacher = request.user
+        request_obj.student = student_user
+        request_obj.save()
+
+        print(f"🎉 ✅ SUCCESS! CategorySharingRequest CREATED:")
+        print(f"   ID: {request_obj.id}")
+        print(f"   Teacher: {request_obj.teacher.username} (ID: {request_obj.teacher.id})")
+        print(f"   Student: {request_obj.student.username} (ID: {request_obj.student.id})")
+        print(f"   Category: {request_obj.category.name} (ID: {request_obj.category.id})")
+        print(f"   Status: {request_obj.status}")
+        print(f"   Message: '{request_obj.message}'")
+        print(f"   Created: {request_obj.created_at}")
+
+        # Дополнительная проверка - найдем созданный объект
+        verification = CategorySharingRequest.objects.get(id=request_obj.id)
+        print(f"🔍 VERIFICATION - Found created object:")
+        print(f"   Verification ID: {verification.id}")
+        print(f"   Verification Student: {verification.student.username}")
+        print(f"   Verification Status: {verification.status}")
+
+        return JsonResponse({
+            'success': True,
+            'message': f'Категория "{category.name}" отправлена ученику {student_user.get_full_name()}'
+        })
+
+    except Exception as e:
+        print(f"❌ ERROR creating CategorySharingRequest: {str(e)}")
+        print(f"❌ Exception type: {type(e)}")
+        import traceback
+        print(f"❌ Traceback:\n{traceback.format_exc()}")
+        return JsonResponse({'success': False, 'error': f'Ошибка создания запроса: {str(e)}'})
+
+
+
+@login_required
+# views.py
+@login_required
+# views.py - обновим get_teacher_categories
+@login_required
+# views.py - обновим get_teacher_categories
+@login_required
+def get_teacher_categories(request):
+    """
+    AJAX endpoint для получения категорий учителя
+    """
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        if profile.role != 'teacher':
+            return JsonResponse({'success': False, 'error': 'Доступ только для учителей'})
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Профиль не найден'})
+
+    try:
+        # Проверим, из какого модуля импортируется модель
+        from dictionary.models import Category
+        print(f"DEBUG: Imported Category from: {Category.__module__}")
+        print(f"DEBUG: Category model: {Category}")
+        
+        # Проверим все категории в системе
+        all_categories = Category.objects.all()
+        print(f"DEBUG: All categories in system: {list(all_categories.values_list('id', 'name', 'created_by'))}")
+        
+        # Получаем категории учителя
+        categories = Category.objects.filter(created_by=request.user)
+        print(f"DEBUG: Categories for teacher {request.user.id}: {list(categories.values_list('id', 'name'))}")
+        
+        categories_list = []
+        for category in categories:
+            word_count = category.words.count() if hasattr(category, 'words') else 0
+            categories_list.append({
+                'id': category.id,
+                'name': category.name,
+                'word_count': word_count,
+                'description': getattr(category, 'description', '') or ''
+            })
+            
+        return JsonResponse({
+            'success': True,
+            'categories': categories_list
+        })
+        
+    except ImportError as e:
+        print(f"DEBUG: Import error: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка загрузки категорий'})
+    except Exception as e:
+        print(f"DEBUG: Exception: {str(e)}")
+        return JsonResponse({'success': False, 'error': f'Ошибка: {str(e)}'})

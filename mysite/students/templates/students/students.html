@@ -1,653 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Entertaining English - Ученики</title>
-    <link rel="stylesheet" href="{% load static %}{% static 'students/styles.css' %}?v=1.0">
-    <style>
-        /* CSS Variables */
-        :root {
-            --primary-color: #22c55e;
-            --primary-hover: #16a34a;
-            --secondary-color: #a855f7;
-            --secondary-hover: #9333ea;
-            --accent-color: #6b7280;
-            --accent-hover: #4b5563;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --info-color: #3b82f6;
-            
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --text-muted: #9ca3af;
-            
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --bg-tertiary: #f3f4f6;
-            
-            --border-color: #e5e7eb;
-            --border-hover: #d1d5db;
-            
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            
-            --transition: all 0.2s ease-in-out;
-            --transition-slow: all 0.3s ease-in-out;
-        }
-
-        /* Reset & Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--bg-secondary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        .header {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-
-        .logo:hover {
-            transform: translateY(-2px);
-        }
-
-        .logo-text {
-            color: var(--text-primary);
-        }
-
-        .logo-accent {
-            color: var(--primary-color);
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            transition: var(--transition);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-            background-color: var(--bg-secondary);
-        }
-
-        .user-greeting {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .btn-login {
-            background: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-login:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-            color: white;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .title-accent {
-            color: white;
-        }
-
-        .hero-description {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            border-radius: 12px;
-            padding: 0;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .large-modal {
-            max-width: 800px;
-            max-height: 90vh;
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.2s;
-        }
-
-        .modal-close:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .search-section {
-            margin-bottom: 2rem;
-        }
-
-        .search-form {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .search-group {
-            flex: 1;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .students-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-
-        .student-card {
-            background: white;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            padding: 1rem;
-            transition: all 0.2s;
-        }
-
-        .student-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .student-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .student-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .avatar-placeholder {
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .student-info {
-            flex: 1;
-        }
-
-        .student-name {
-            margin: 0 0 0.25rem 0;
-            color: #333;
-            font-size: 1.1rem;
-        }
-
-        .student-email {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .student-actions {
-            text-align: center;
-        }
-
-        .loading, .error, .no-students {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-        }
-
-        .loading {
-            color: #667eea;
-        }
-
-        .error {
-            color: #dc3545;
-        }
-
-        .add-students-btn {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white !important;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.2s;
-        }
-
-        .add-students-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-        }
-
-        /* Hero Actions */
-        .hero-actions {
-            margin-top: 2rem;
-        }
-
-        /* Section Headers */
-        .section-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-header h2 {
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            font-size: 2rem;
-        }
-
-        .section-description {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        /* Students Section */
-        .students-section {
-            margin: 3rem 0;
-        }
-
-        .students-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .student-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-color);
-        }
-
-        .student-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .student-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .student-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-
-        .avatar-placeholder {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .student-info {
-            flex: 1;
-        }
-
-        .student-name {
-            margin: 0 0 0.5rem 0;
-            color: var(--text-primary);
-            font-size: 1.3rem;
-        }
-
-        .student-email, .relationship-date, .student-notes {
-            display: block;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .student-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        /* Homework Section */
-        .homework-section {
-            margin: 3rem 0;
-        }
-
-        .homework-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .homework-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-color);
-        }
-
-        .homework-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .homework-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .homework-title {
-            margin: 0;
-            color: var(--text-primary);
-            font-size: 1.3rem;
-        }
-
-        .homework-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .homework-status.completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .homework-status.pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .homework-details {
-            margin: 1rem 0;
-        }
-
-        .homework-details h4 {
-            margin: 0 0 0.5rem 0;
-            color: var(--text-primary);
-            font-size: 1rem;
-        }
-
-        .homework-description {
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .homework-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .homework-meta span {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .homework-actions {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-content h3 {
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-        }
-
-        .empty-content p {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .empty-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .empty-hint {
-            color: var(--text-muted);
-            font-style: italic;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary, .btn-secondary, .btn-success {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            min-width: 120px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: #0056b3;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 768px) {
-            .search-form {
-                flex-direction: column;
-            }
-            
-            .students-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 1rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'students/styles.css' %}?v=1.0">
+    <script src="{% static 'students/mobile-nav.js' %}?v=1.0" defer></script>
 </head>
 <body>
     {% load student_filters %}
@@ -723,6 +85,11 @@
                                 <span class="btn-icon">📚</span>
                                 Просмотр заданий
                             </a>
+                            <button type="button" class="btn-secondary share-category-btn" 
+                                    onclick="openShareCategoryModal({{ relationship.student.id }}, '{{ relationship.student.get_full_name|default:relationship.student.username }}')">
+                                <span class="btn-icon">📚</span>
+                                Поделиться категорией
+                            </button>
                         </div>
                     </div>
                     {% endfor %}
@@ -832,6 +199,38 @@
         </div>
     </main>
 
+    <!-- Модальное окно для обмена категориями -->
+    <div class="modal" id="shareCategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Поделиться категорией слов</h3>
+                <button type="button" class="modal-close" onclick="closeShareCategoryModal()">&times;</button>
+            </div>
+            <!-- Исправленная форма -->
+            <form class="request-form" id="shareCategoryForm" method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Ученик:</label>
+                    <div id="selectedStudentName" class="form-control-static"></div>
+                </div>
+                <div class="form-group">
+                    <label for="categorySelect" class="form-label">Категория слов:</label>
+                    <select id="categorySelect" name="category" class="form-control" required>
+                        <option value="">Выберите категорию...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="shareMessage" class="form-label">Сообщение (необязательно):</label>
+                    <textarea id="shareMessage" name="message" class="form-control" rows="3" placeholder="Дополнительное сообщение для ученика..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeShareCategoryModal()">Отмена</button>
+                    <button type="submit" class="btn-primary">Отправить категорию</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Модальное окно для добавления учеников -->
     <div id="addStudentsModal" class="modal">
         <div class="modal-content large-modal">
@@ -892,7 +291,7 @@
             </form>
         </div>
     </div>
-
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -907,10 +306,19 @@
             </div>
         </div>
     </footer>
-
     <script>
         let currentStudentId = null;
         let currentStudentName = '';
+
+        function showAddStudentsModal() {
+            document.getElementById('addStudentsModal').style.display = 'flex';
+            loadStudentsList();
+        }
+
+        function closeAddStudentsModal() {
+            document.getElementById('addStudentsModal').style.display = 'none';
+            document.getElementById('studentSearchForm').reset();
+        }
 
         function showRequestModal(studentId, studentName) {
             currentStudentId = studentId;
@@ -923,21 +331,25 @@
             document.getElementById('requestForm').reset();
         }
 
-        function showAddStudentsModal() {
-            document.getElementById('addStudentsModal').style.display = 'flex';
-            loadStudentsList(); // Загружаем список учеников при открытии
+        function openShareCategoryModal(studentId, studentName) {
+            currentStudentId = studentId;
+            currentStudentName = studentName;
+            
+            document.getElementById('selectedStudentName').textContent = studentName;
+            document.getElementById('shareCategoryModal').style.display = 'flex';
+            
+            loadTeacherCategories();
         }
 
-        function closeAddStudentsModal() {
-            document.getElementById('addStudentsModal').style.display = 'none';
-            document.getElementById('studentSearchForm').reset();
+        function closeShareCategoryModal() {
+            document.getElementById('shareCategoryModal').style.display = 'none';
+            document.getElementById('shareCategoryForm').reset();
         }
 
         function loadStudentsList(searchQuery = '') {
             const studentsList = document.getElementById('studentsList');
             studentsList.innerHTML = '<div class="loading">Загрузка учеников...</div>';
             
-            // Загружаем список учеников через AJAX
             fetch(`/students/get-students-list/?search=${searchQuery}`)
                 .then(response => response.json())
                 .then(data => {
@@ -1007,42 +419,57 @@
         }
 
         function createHomework(studentId, studentName) {
-            // Перенаправляем на страницу создания домашнего задания
             window.location.href = `/students/create-homework/${studentId}/`;
         }
 
-        // Обработчик поиска учеников
-        document.getElementById('studentSearchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const searchQuery = document.getElementById('studentSearchInput').value;
-            loadStudentsList(searchQuery);
-        });
+        function loadTeacherCategories() {
+            fetch('{% url "students:get_teacher_categories" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const categorySelect = document.getElementById('categorySelect');
+                    categorySelect.innerHTML = '<option value="">Выберите категорию...</option>';
+                    
+                    if (data.success) {
+                        data.categories.forEach(category => {
+                            const option = document.createElement('option');
+                            option.value = category.id;
+                            option.textContent = `${category.name} (${category.word_count} слов)`;
+                            categorySelect.appendChild(option);
+                        });
+                    } else {
+                        console.error('Ошибка загрузки категорий:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
+        }
 
-        document.getElementById('requestForm').addEventListener('submit', function(e) {
+        // Обработчик отправки формы для обмена категориями
+        document.getElementById('shareCategoryForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
             
-            fetch(`/students/send-request/${currentStudentId}/`, {
+            fetch(`{% url "students:share_category" student_id=0 %}`.replace('0', currentStudentId), {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    closeRequestModal();
-                    location.reload(); // Обновляем страницу для отображения изменений
+                    closeShareCategoryModal();
                 } else {
                     alert('Ошибка: ' + data.error);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Произошла ошибка при отправке приглашения');
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при отправке категории');
             });
         });
 

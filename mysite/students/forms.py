@@ -1,5 +1,5 @@
 from django import forms
-from .models import StudentRequest, StudentTeacherRelationship, Homework
+from .models import StudentRequest, StudentTeacherRelationship, Homework, CategorySharingRequest
 from authen.models import UserProfile
 
 class StudentRequestForm(forms.ModelForm):
@@ -54,7 +54,7 @@ class StudentSearchForm(forms.Form):
         }),
         label='Поиск'
     )
-    
+
     role_filter = forms.ChoiceField(
         choices=[('', 'Все роли')] + UserProfile.ROLE_CHOICES,
         required=False,
@@ -91,3 +91,41 @@ class HomeworkForm(forms.ModelForm):
             'description': 'Описание',
             'due_date': 'Срок выполнения'
         }
+
+class CategorySharingForm(forms.ModelForm):
+    """
+    Форма для отправки категории ученику
+    """
+    class Meta:
+        model = CategorySharingRequest
+        fields = ['category', 'message']
+        widgets = {
+            'category': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Дополнительное сообщение для ученика (необязательно)...'
+            }),
+        }
+        labels = {
+            'category': 'Категория слов',
+            'message': 'Сообщение'
+        }
+
+    def __init__(self, *args, **kwargs):
+        teacher = kwargs.pop('teacher', None)
+        super().__init__(*args, **kwargs)
+        
+        if teacher:
+            from dictionary.models import Category
+            categories = Category.objects.filter(created_by=teacher).order_by('name')
+            
+            # Используем queryset вместо ручного создания choices
+            self.fields['category'].queryset = categories
+            
+            # Добавляем информацию о количестве слов в лейбл
+            for category in categories:
+                word_count = category.words.count()
+                self.fields['category'].label_from_instance = lambda obj: f"{obj.name} ({obj.words.count()} слов)"

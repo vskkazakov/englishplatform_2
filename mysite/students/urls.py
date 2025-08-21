@@ -14,4 +14,6 @@ urlpatterns = [
     path('view-homework/<int:homework_id>/', views.view_homework, name='view_homework'),  # ИСПРАВЛЕНО
     path('get-students-list/', views.get_students_list, name='get_students_list'),
     path('test/', views.test_view, name='test'),
+    path('share-category/<int:student_id>/', views.share_category, name='share_category'),
+    path('get-teacher-categories/', views.get_teacher_categories, name='get_teacher_categories'),
 ]

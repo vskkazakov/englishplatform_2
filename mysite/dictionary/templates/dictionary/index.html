@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <title>Entertaining English - Словарь</title>
     <link rel="stylesheet" href="{% load static %}{% static 'dictionary/styles.css' %}?v=2.1">
+    <script src="{% static 'dictionary/mobile-nav.js' %}?v=1.0" defer></script>
 </head>
 <body>
-    <header class="header">
+   <header class="header">
         <div class="header-container">
             <div class="logo">
                 <span class="logo-text">Entertaining</span><span class="logo-accent">English</span>
@@ -18,7 +19,7 @@
             <div class="nav">
                 <a href="{% url 'index' %}" class="nav-link">На главную</a>
                 <a href="{% url 'dictionary:index' %}" class="nav-link">Словарь</a>
-                <a href="{% url 'tests:index' %}" class="nav-link">Тесты</a>
+                <a href="/tests" class="nav-link">Тесты</a>
                 <a href="{% url 'act_static:index' %}" class="nav-link">Статистика</a>
                 <a href="{% url 'games:index' %}" class="nav-link">Игры</a>
                 {% if user.is_authenticated %}

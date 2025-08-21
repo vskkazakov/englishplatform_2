@@ -3,6 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -13,6 +14,7 @@
         window.registrationUrl = "{% url 'authen:index' %}";
     </script>
     <script src="{% static 'mysite/app.js' %}?v=2.0" defer></script>
+    <script src="{% static 'mysite/mobile-nav.js' %}?v=1.0" defer></script>
 </head>
 <body>
     <header class="header">
@@ -32,7 +34,7 @@
                 {% endif %}
             </div>
         </div>
-
+    </header>
     <main class="main">
         <div class="container">
             <section class="hero">

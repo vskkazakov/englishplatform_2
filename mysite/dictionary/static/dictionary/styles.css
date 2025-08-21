@@ -1,6 +1,11 @@
 /* Dictionary Styles - Modern Design */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Подключение адаптивных стилей */
+@import url('../../mainApp/static/mysite/responsive.css');
+@import url('responsive.css');
+@import url('mobile-nav.css');
+
 /* CSS Variables */
 :root {
     --primary-color: #22c55e;
